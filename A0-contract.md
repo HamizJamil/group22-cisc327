@@ -35,9 +35,9 @@ We each promise to make our best effort to ensure that the team works together a
 
 Team Member #1:
 
-Name: 
+Name: Hamiz Jamil
 
-Student Number: 
+Student Number: 20147727
 
 
 Team Member #2:
