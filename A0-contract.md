@@ -42,9 +42,9 @@ Student Number: 20147727
 
 Team Member #2:
 
-Name:
+Name: William Kennedy
 
-Student Number:	
+Student Number:	20120570
 
 
 Team Member #3:
