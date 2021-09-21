@@ -49,9 +49,9 @@ Student Number:	20120570
 
 Team Member #3:
 
-Name:
+Name: Brock Tureski
 
-Student Number:	
+Student Number:	20151968
 
 
 Team Member #4:
