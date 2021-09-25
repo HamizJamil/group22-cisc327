@@ -1,18 +1,15 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+import random
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
-<<<<<<< HEAD
-db = SQLAlchemy(app)
 
-=======
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # ignore overhead restrictions
 db = SQLAlchemy(app)
 
 total_products = 0
 list_of_products = []
->>>>>>> will_branch
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -20,9 +17,6 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
 
     def __repr__(self):
-<<<<<<< HEAD
-        return '<User %r>' % self.username
-=======
         return '<User %r>' % self.username
 
 
@@ -65,4 +59,3 @@ class Product(db.Model):
                                                               self.verified_buyer, self.dollars_made,
                                                               self.verified_buyer_reviews)
 
->>>>>>> will_branch
