@@ -20,24 +20,24 @@
 - List any other important details for testing
 
 ## Format Checklist
-[ ] avoid excessive whitepsace and unecessary brackets or spacing for concision
-[ ] Capital Letters for classes 
-[ ] Lowercase letters for functions
-[ ] use "_" to separate words (no camel casing)
-[ ] Double spacing between classes
-[ ] No lines longer than 120 characters
-[ ] When Creating Class Include: small description, attribute list and description, method description 
-[ ] Two blank lines at end of file
-[ ] Double space before comments (in-line only)
+- [ ] avoid excessive whitepsace and unecessary brackets or spacing for concision
+- [ ] Capital Letters for classes 
+- [ ] Lowercase letters for functions
+- [ ] use "_" to separate words (no camel casing)
+- [ ] Double spacing between classes
+- [ ] No lines longer than 120 characters
+- [ ] When Creating Class Include: small description, attribute list and description, method description 
+- [ ] Two blank lines at end of file
+- [ ] Double space before comments (in-line only)
 
 ## Process Checklist
-[ ] Continuously maintained test suites as requirements and quality control
-[ ] Pair programming
-[ ] Code review of all code
-[ ] A simplest possible solution to every problem
-[ ] Continuous redesign and rearchitecting
-[ ] Automation in testing and integration
-[ ] All the code/documentation contributions will go through the pull-request/review process
+- [ ] Continuously maintained test suites as requirements and quality control
+- [ ] Pair programming
+- [ ] Code review of all code
+- [ ] A simplest possible solution to every problem
+- [ ] Continuous redesign and rearchitecting
+- [ ] Automation in testing and integration
+- [ ] All the code/documentation contributions will go through the pull-request/review process
 
 ## Project Requirement
 - A registered user can buy and sell products through this online application.
