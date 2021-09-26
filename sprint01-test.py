@@ -11,12 +11,12 @@ iPhone11 = Product(product_ID=0, seller="WilliamKennedy-ADMIN", price=600, numbe
                    product_description='Brand New Never Opened iPhone 11 with 250GB of storage', verified_buyer='NONE',
                    dollars_made=0, verified_buyer_reviews='NONE')
 
-db.session.add(ADMIN)
-db.session.add(iPhone11)  # adding rows to identified columns
-db.session.commit()
+# db.session.add(ADMIN)
+# db.session.add(iPhone11)
+# adding rows to identified columns ^^ RUN ONCE TO INITIALIZE FILE THEN COMMENT OUT FOR QUERY
 
-User.query.all()  # looping through all rows in User column
-Product.query.all()
+db.session.commit()  # permanent storage of items in database
 
-
+print(User.query.all())  # looping through all rows in User column
+print(Product.query.all())
 
