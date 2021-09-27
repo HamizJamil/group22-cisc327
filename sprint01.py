@@ -83,8 +83,8 @@ class Wallet(db.Model):
     When a <Transaction> goes through, funds will be transferred from the buyer's wallet to the seller's wallet.
     
     Attributes:
-        userId: Whose wallet this is.
-        funds: How much money they have deposited in their wallet
+        - userId: Whose wallet this is.
+        - funds: How much money they have deposited in their wallet
     """
     funds = db.Column(db.Integer, primary_key = True)
     userId = db.Column(db.Integer, primary_key = True)
@@ -98,6 +98,11 @@ class Wallet(db.Model):
         method to deposit funds into the user's wallet
         """
         self.funds += funds
+    def withdraw(self, funds):
+        """
+        method to deduct funds from the wallet
+        """
+        self.fudns -= funds
      
     def __repr__(self):
         return "The wallet associated with the user ID {} has the account balance: {}".format(self.userId, self.funds)
