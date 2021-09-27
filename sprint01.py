@@ -13,12 +13,27 @@ db = SQLAlchemy(app)
 
 
 class User(db.Model):
+    """
+    Class to represent a user who has registered for the "ebay" site
+
+    Attributes:
+        - id = A unique ID associated to each user to validate existence of user in database
+        - username = A user chosen name which is publicly seen by all other users and used to log in
+        - email = An email address associated to the users' account, used to log in
+        - balance = An integer amount representing the amount of currency in the users account to be spent or withdrawn
+        - buyer = asserts whether or not the user is a buyer on the site
+        - seller = asserts whether or not the user is a seller on the site
+    """
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    balance = db.Column(db.Integer, primary_key=True)
+    buyer = db.Column(db.Boolean, primary_key=True)
+    seller = db.Column(db.Boolean, primary_key=True)
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return "<User(id={}, username={}, email={}, balance={}, buyer={}, seller={})>".format(self.id, self.username, 
+        self.email, self.balance, self.buyer, self.seller) 
 
 
 class Product(db.Model):
