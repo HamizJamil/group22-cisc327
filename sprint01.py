@@ -86,8 +86,8 @@ class Wallet(db.Model):
         - userId: Whose wallet this is.
         - funds: How much money they have deposited in their wallet
     """
-    funds = db.Column(db.Integer, primary_key = True, autoincrement = "auto")
-    userId = db.Column(db.Integer, primary_key = True)
+    funds = db.Column(db.Integer, primary_key = True)
+    userId = db.Column(db.Integer, primary_key = True, autoincrement = "auto")
     
     def __init__(self, userId):
         self.userId = userId
