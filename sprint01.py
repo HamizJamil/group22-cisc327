@@ -77,3 +77,27 @@ class Product(db.Model):
                "product_description= {}, verified_buyer= {}, dollars_made= {},verified_buyer_reviews= {})>".format(
                 self.product_title,self.product_ID, self.seller, self.price, self.number_of_product,
                 self.product_description, self.verified_buyer, self.dollars_made, self.verified_buyer_reviews)
+class Wallet(db.Model):
+    """
+    Funds associated with a <User> to be able to pay for a <Product>
+    When a <Transaction> goes through, funds will be transferred from the buyer's wallet to the seller's wallet.
+    
+    Attributes:
+        userId: Whose wallet this is.
+        funds: How much money they have deposited in their wallet
+    """
+    funds = db.Column(db.Integer, primary_key = True)
+    userId = db.Column(db.Integer, primary_key = True)
+    
+    def __init__(self, userId):
+        self.userId = userId
+        self.funds = 0
+       
+    def deposit(self, funds):
+        """
+        method to deposit funds into the user's wallet
+        """
+        self.funds += funds
+     
+    def __repr__(self):
+        return "The wallet associated with the user ID {} has the account balance: {}".format(self.userId, self.funds)
