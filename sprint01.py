@@ -24,7 +24,7 @@ class User(db.Model):
         - buyer = asserts whether or not the user is a buyer on the site
         - seller = asserts whether or not the user is a seller on the site
     """
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement = "auto")
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     balance = db.Column(db.Integer, primary_key=True)
@@ -86,7 +86,7 @@ class Wallet(db.Model):
         - userId: Whose wallet this is.
         - funds: How much money they have deposited in their wallet
     """
-    funds = db.Column(db.Integer, primary_key = True)
+    funds = db.Column(db.Integer, primary_key = True, autoincrement = "auto")
     userId = db.Column(db.Integer, primary_key = True)
     
     def __init__(self, userId):
