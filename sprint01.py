@@ -85,13 +85,19 @@ class Wallet(db.Model):
     Attributes:
         - userId: Whose wallet this is.
         - funds: How much money they have deposited in their wallet
+        - accNumber: the users bank account number
+        - routingNumber: the users
     """
     funds = db.Column(db.Integer, primary_key = True)
     userId = db.Column(db.Integer, primary_key = True, autoincrement = "auto")
+    accNumber = db.Column(db.Integer, primary_key = True)
+    routingNumber = db.Column(db.Integer, primary_key = True)
     
     def __init__(self, userId):
         self.userId = userId
         self.funds = 0
+        self.accNumber = accNumber
+        self.routingNumber = routingNumber
        
     def deposit(self, funds):
         """
@@ -102,7 +108,34 @@ class Wallet(db.Model):
         """
         method to deduct funds from the wallet
         """
-        self.fudns -= funds
+        self.funds -= funds
      
     def __repr__(self):
         return "The wallet associated with the user ID {} has the account balance: {}".format(self.userId, self.funds)
+    
+ class transactions(db.Model):
+    """
+    When a user buys a product a transaction entity is created recording the product_ID as transactionID and details about the
+    sale are logged within the database
+    
+    Attributes:
+        - transactionID = Random integer hashed with the intent of logging and storing each individual sale
+        - buyerID = UserID of the buyer
+        - sellerID = userID of the seller
+        - date = time at which the transaction occured
+        - transactionAmount = the price at which the item was bought/sold
+    """
+    transactionID = db.Column(db.Integer, primary_key = True)
+    buyerID = db.Column(db.Integer, primary_key = True)
+    sellerID = db.Column(db.Integer, primary_key = True)
+    date = db.Column(db.Integer, primary_key = True)
+    transactionAmount = db.Column(db.Integer, primary_key = True)
+        
+    def __init__(self, productID,):
+        self.transactionID = product_ID
+        self.buyerID = buyerID
+        self.sellerID = sellerID
+        self.date = date
+        self.transactionAmount = transactionAmount
+        
+    
