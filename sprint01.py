@@ -93,7 +93,7 @@ class Wallet(db.Model):
     accNumber = db.Column(db.Integer, primary_key = True)
     routingNumber = db.Column(db.Integer, primary_key = True)
     
-    def __init__(self, userId):
+    def __init__(self, userId, accNumber, routingNumber):
         self.userId = userId
         self.funds = 0
         self.accNumber = accNumber
@@ -131,7 +131,7 @@ class transactions(db.Model):
     date = db.Column(db.Integer, primary_key = True)
     transactionAmount = db.Column(db.Integer, primary_key = True)
         
-    def __init__(self, productID,):
+    def __init__(self, product_ID, buyerID, sellerID, date, transactionAmount):
         self.transactionID = product_ID
         self.buyerID = buyerID
         self.sellerID = sellerID
