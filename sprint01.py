@@ -113,7 +113,7 @@ class Wallet(db.Model):
     def __repr__(self):
         return "The wallet associated with the user ID {} has the account balance: {}".format(self.userId, self.funds)
     
- class transactions(db.Model):
+class transactions(db.Model):
     """
     When a user buys a product a transaction entity is created recording the product_ID as transactionID and details about the
     sale are logged within the database

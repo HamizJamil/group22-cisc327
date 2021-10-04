@@ -12,9 +12,9 @@ iPhone11 = Product(product_ID=0, seller="WilliamKennedy-ADMIN", price=600, numbe
                    product_description='Brand New Never Opened iPhone 11 with 250GB of storage', verified_buyer='NONE',
                    dollars_made=0, verified_buyer_reviews='NONE')
 
-# db.session.add(ADMIN)
-# db.session.add(ADMIN_TWO)
-# db.session.add(iPhone11)
+db.session.add(ADMIN)
+db.session.add(ADMIN_TWO)
+db.session.add(iPhone11)
 # adding rows to identified columns ^^ RUN ONCE TO INITIALIZE FILE THEN COMMENT OUT FOR QUERY
 
 db.session.commit()  # permanent storage of items in database
