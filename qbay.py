@@ -7,7 +7,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir,'db.sqlite')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
+    os.path.join(basedir, 'db.sqlite')
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  
 # ignore overhead restrictions
@@ -44,7 +45,7 @@ class Product(db.Model):
     product_description = db.Column(db.String(150), primary_key=True)
 
     def __init__(self, product_ID, owner_email, price, number_of_product,
-     product_title, product_description):
+                 product_title, product_description):
         self.product_title = product_title
         self.product_ID = product_ID
         self.owner_email = owner_email
@@ -55,5 +56,6 @@ class Product(db.Model):
     def __repr__(self):
         return "<Product(product_title= {}, product_ID= {}, owner_email= {},\
             price= {}, number_of_product= {}, product_description= {})>"\
-            .format(self.product_title,self.product_ID, self.owner_email, 
-            self.price, self.number_of_product,  self.product_description)
+            .format(self.product_title, self.product_ID, self.owner_email, 
+                    self.price, self.number_of_product, 
+                    self.product_description)
