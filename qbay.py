@@ -51,35 +51,36 @@ class Product(db.Model):
     product_description = db.Column(db.String(2000), primary_key=True)
     product_ID = db.Column(db.Integer, primary_key=True)
     owner_email = db.Column(db.String(80), primary_key=True, nullable=False)
-    price = db.Column(db.Integer, primary_key=True)
+    product_price = db.Column(db.Integer, primary_key=True)
     last_date_modified = db.Column(db.String(80), primary_key=True)
-
+    
     def __repr__(self):
-        return "<Product(product_title= {}, product_ID= {}, owner_email= {},\
-        price= {}, number_of_product= {}, product_description= {},\
-        last_date_modified={} )>".format(self.product_title, 
-                                         self.product_description, 
-                                         self.product_ID, 
-                                         self.owner_email, 
-                                         self.price, self.last_date_modified)
+        return """<Product(product_title= {}, product_description= {}, 
+                product_ID= {}, owner_email= {}, price= {}, 
+                last_date_modified={})>""".format(self.product_title,
+                                                  self.product_description, 
+                                                  self.product_ID, 
+                                                  self.owner_email, 
+                                                  self.product_price, 
+                                                  self.last_date_modified)
 
 
 def create_product(title, description, owner_email, price): 
     # method will create product as long as it follows the site instructions
     global number_of_products
-    description_size = len(description)
-    title_size = len(title)
+    description_size = len(str(description))
+    title_size = len(str(title))
     if title.startswith(' '):
         print("ERROR: No Prefixes Allowed in Title")
         return False
-    if title.endswith(''):
+    if title.endswith(' '):
         print("ERROR: No Suffixes Allowed in Title")
         return False
     if not title.isalnum():
         print("ERROR: Title MUST be Alphanumeric")
         return False
     product_exists = Product.query.filter_by(product_title=title).all()
-    if product_exists > 0:
+    if len(product_exists) > 0:
         print("ERROR: Product Must Be Unique")
         return False
     if description_size < title_size:
@@ -103,25 +104,29 @@ def create_product(title, description, owner_email, price):
         print("ERROR: Date Not Possible")
         return False
     id = number_of_products
-    product = Product(title, description, id, owner_email, price, 
-                      todays_date)  # create the product object
+    product = Product(product_title=title, product_description=description, 
+                      product_ID=id, owner_email=owner_email,
+                      product_price=price, 
+                      last_date_modified=todays_date)  
+    # create the product object
 
     db.session.add(product)
     db.session.commit()  # add product to db and save
     number_of_products += 1  # this value used to create unique ID
 
 
-def update_product(search_id, new_price=None, new_title=None, 
+def update_product(title, new_price=None, new_title=None, 
                    new_description=None):
     global number_of_products
     # searching for product based off unique ID
-    product_to_be_updated = Product.query.filter_by(id=search_id)
-    description_size = len(product_to_be_updated.description)
-    title_size = len(product_to_be_updated.title)
+    product_to_be_updated = Product.query.filter_by(product_title=title
+                                                    ).first()
+    description_size = len(str(new_description))
+    title_size = len(str(new_title))
     # parameters are deafaulted to NONE so if no change is made the product 
     # is unaffected -- now evaluate the changes with our site standard
     if new_price is not None:
-        if new_price < product_to_be_updated.price:
+        if new_price < int(product_to_be_updated.product_price):
             print("ERROR: Cannot Reduce Price")
             return False
         if new_price > 10000:
@@ -130,22 +135,22 @@ def update_product(search_id, new_price=None, new_title=None,
         if new_price < 10:
             print("ERROR: Price must be 1More than $10 CAD")
             return False
-        product_to_be_updated.price = new_price
+        product_to_be_updated.product_price = new_price
     if new_title is not None:
         if new_title.startswith(' '):
             print("ERROR: No Prefixes Allowed in Title")
             return False
-        if new_title.endswith(''):
+        if new_title.endswith(' '):
             print("ERROR: No Suffixes Allowed in Title")
             return False
         if not new_title.isalnum():
             print("ERROR: Title MUST be Alphanumeric")
             return False
         product_exists = Product.query.filter_by(product_title=new_title).all()
-        if product_exists > 0:
+        if len(product_exists) > 0:
             print("ERROR: Product Must Be Unique")
             return False
-        product_to_be_updated.title = new_title
+        product_to_be_updated.product_title = new_title
     if new_description is not None:
         if description_size < title_size:
             print("ERROR: Description Must Be Larger Than Title")
@@ -153,6 +158,6 @@ def update_product(search_id, new_price=None, new_title=None,
         if description_size < 20:
             print("ERROR: Description Must Be Larger Than 20 Characters")
             return False
-        product_to_be_updated.description = new_description
+        product_to_be_updated.product_description = new_description
     product_to_be_updated.last_date_modified = date.today()
     # update datetime to new datetime value
