@@ -1,9 +1,9 @@
 # Pull Request Template
 
 ## Description
-- Include Summary of Change
-- Include why you made this change and how it benifit the stakeholders 
-- What are the requirements for this change
+- Include Summary of Change -> updated product entity to meet stakeholders requirements and added two functions -> one to register the product in the database and the other to update the product
+- Include why you made this change and how it benifit the stakeholders -> This will allow us to register products on frontend and allow users to change certain attributes to more accurately advertise their products
+- What are the requirements for this change -> no new requiements needed
 
 
 ## Type of Chanage
