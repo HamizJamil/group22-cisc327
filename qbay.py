@@ -161,3 +161,4 @@ def update_product(title, new_price=None, new_title=None,
         product_to_be_updated.product_description = new_description
     product_to_be_updated.last_date_modified = date.today()
     # update datetime to new datetime value
+    # values are only updated if user entry field is filled --> else default
