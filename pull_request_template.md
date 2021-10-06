@@ -46,3 +46,6 @@
 - Shipping and handling will be carried out offline, assuming that the product is always shipped and arrived instantly.
 - User payment is directly through their balance on the online application.
 - A user can add money to their account through online banking (transfer directly from their own banking account).
+
+## Approval 
+[x] Approved by Reviewing Team Members
