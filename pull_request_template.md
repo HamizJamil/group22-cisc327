@@ -8,7 +8,7 @@
 
 ## Type of Chanage
 [ ] Bug Fix
-[ ] Added Feature
+[x] Added Feature
 [ ] Automated Process
 [ ] Computation
 [ ] Interface
@@ -20,24 +20,24 @@
 - List any other important details for testing
 
 ## Format Checklist
-- [ ] avoid excessive whitepsace and unecessary brackets or spacing for concision
-- [ ] Capital Letters for classes 
-- [ ] Lowercase letters for functions
-- [ ] use "_" to separate words (no camel casing)
-- [ ] Double spacing between classes
-- [ ] No lines longer than 120 characters
-- [ ] When Creating Class Include: small description, attribute list and description, method description 
-- [ ] Two blank lines at end of file
-- [ ] Double space before comments (in-line only)
+- [x] avoid excessive whitepsace and unecessary brackets or spacing for concision
+- [x] Capital Letters for classes 
+- [x] Lowercase letters for functions
+- [x] use "_" to separate words (no camel casing)
+- [x] Double spacing between classes
+- [x] No lines longer than 120 characters
+- [x] When Creating Class Include: small description, attribute list and description, method description 
+- [x] Two blank lines at end of file
+- [x] Double space before comments (in-line only)
 
 ## Process Checklist
-- [ ] Continuously maintained test suites as requirements and quality control
-- [ ] Pair programming
-- [ ] Code review of all code
-- [ ] A simplest possible solution to every problem
-- [ ] Continuous redesign and rearchitecting
-- [ ] Automation in testing and integration
-- [ ] All the code/documentation contributions will go through the pull-request/review process
+- [x] Continuously maintained test suites as requirements and quality control
+- [x] Pair programming
+- [x] Code review of all code
+- [x] A simplest possible solution to every problem
+- [x] Continuous redesign and rearchitecting
+- [x] Automation in testing and integration
+- [x] All the code/documentation contributions will go through the pull-request/review process
 
 ## Project Requirement
 - A registered user can buy and sell products through this online application.
