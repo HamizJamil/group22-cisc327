@@ -1,9 +1,10 @@
 # Pull Request Template
 
 ## Description
-- Include Summary of Change
-- Include why you made this change and how it benifit the stakeholders 
-- What are the requirements for this change
+- add variables to user class
+- add functionality for registering user 
+- add class for review
+- add class for transaction
 
 
 ## Type of Chanage
@@ -15,9 +16,7 @@
 [ ] Logic/Control
 
 ## Testing
-- Please list the tests you have made to prove the efficiency/validation of the change
-- List the instructions to replicate the test
-- List any other important details for testing
+
 
 ## Format Checklist
 - [x] avoid excessive whitepsace and unecessary brackets or spacing for concision
@@ -48,4 +47,4 @@
 - A user can add money to their account through online banking (transfer directly from their own banking account).
 
 ## Approval 
-[x] Approved by Reviewing Team Members
+[] Approved by Reviewing Team Members
