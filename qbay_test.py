@@ -10,6 +10,8 @@ desc = 'Brand New iPhone 11 with 250GB of storage'
 # iPhone11 = create_product("iPhone11", desc,"WilliamKennedy-ADMIN", 600)
 
 update_product("iPhone11", 1400, "New IPhone11", "First iPhone on QBay")
+test_user = User()
+print(test_user.register_user("test user", "testuser@gmail.com","John123"))
 
 print(Product.query.all())
 
