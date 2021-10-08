@@ -77,6 +77,7 @@ def create_product(title, description, owner_email, price):
         print("ERROR: No Suffixes Allowed in Title")
         return False
     if not title.isalnum():
+        
         print("ERROR: Title MUST be Alphanumeric")
         return False
     product_exists = Product.query.filter_by(product_title=title).all()
@@ -115,11 +116,11 @@ def create_product(title, description, owner_email, price):
     number_of_products += 1  # this value used to create unique ID
 
 
-def update_product(title, new_price=None, new_title=None, 
+def update_product(search_title, new_price=None, new_title=None, 
                    new_description=None):
     global number_of_products
     # searching for product based off unique ID
-    product_to_be_updated = Product.query.filter_by(product_title=title
+    product_to_be_updated = Product.query.filter_by(product_title=search_title
                                                     ).first()
     description_size = len(str(new_description))
     title_size = len(str(new_title))
