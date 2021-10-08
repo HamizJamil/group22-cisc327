@@ -77,9 +77,9 @@ def create_product(title, description, owner_email, price):
         print("ERROR: No Suffixes Allowed in Title")
         return False
     if not title.isalnum():
-        
-        print("ERROR: Title MUST be Alphanumeric")
-        return False
+        if " " not in title:
+            print("ERROR: Title MUST be Alphanumeric")
+            return False
     product_exists = Product.query.filter_by(product_title=title).all()
     if len(product_exists) > 0:
         print("ERROR: Product Must Be Unique")
@@ -145,8 +145,9 @@ def update_product(search_title, new_price=None, new_title=None,
             print("ERROR: No Suffixes Allowed in Title")
             return False
         if not new_title.isalnum():
-            print("ERROR: Title MUST be Alphanumeric")
-            return False
+            if " "  not in new_title:
+                print("ERROR: Title MUST be Alphanumeric")
+                return False
         product_exists = Product.query.filter_by(product_title=new_title).all()
         if len(product_exists) > 0:
             print("ERROR: Product Must Be Unique")
