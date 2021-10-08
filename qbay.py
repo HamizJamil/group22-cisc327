@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 from datetime import date
 import random
+from email.utils import parseaddr
   
 basedir = os.path.abspath(os.path.dirname(__file__))  
 # accessing proper directory for db file
@@ -15,15 +16,83 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 # GLOBAL VARIABLES
 number_of_products = 0
+number_of_reviews = 0
+special_characters = "!@#$%^&*()-+?_=,<>/"
+
+
+
+
+
+
 
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'User'
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(120), unique=False, nullable=False)
+    shipping_address= db.Column(db.String(120), nullable=True)
+    postal_code = db.Column(db.String(120), nullable=True)
+    balance = db.Column(db.Integer, nullable=False)
+
 
     def __repr__(self):
         return '<User %r>' % self.username
+    
+    def register_user(user,user_email,user_password):
+        if user_email is None:
+            print("ERROR: you must enter a username.")
+            return False
+
+        if user_password is None: 
+            print("ERROR: you must enter a password.")
+            return False
+        user_taken = User.query.filter_by(email=user_email).all()
+        if user_taken > 0:
+            print("This username is taken by an existing user. Please choose another.")
+            return False
+        # if email format is incorrect 
+            print("ERROR: Please enter a valid email address.")
+            return False
+        if len(user_password)<6:
+                    print("ERROR: Password must be longer than 6 characters.")
+                    return False
+        if not any(c in special_characters for c in user_password):
+                    print("ERROR: Password must contain atleast one special character.")
+                    return False
+        for char in user_password:
+            i= char.isupper()
+            if i ==True:
+                break
+        if i is not True:
+            print("ERROR: Password must contain atleast one upper case letter.")
+            return False
+        for char in user_password:
+            i= char.islower()
+            if i ==True:
+                break
+        if i is not True:
+                    print("ERROR: Password must contain atleast one lower case letter.")
+                    return False
+        if user is None:
+                    print("ERROR: null username field.")
+                    return False
+        if not user.isalnum():
+                    print("ERROR: username MUST be Alphanumeric")
+                    return False
+        if user.startswith(' '):
+                    print("ERROR: No Prefixes Allowed in Username")
+                    return False
+        if user.endswith(' '):
+            print("ERROR: No Suffixes Allowed in Username")
+            return False
+        if len(user) < 3 or len(user) > 19:
+            print("ERROR: Username must be greater than 2 characters and less than 20.")
+            return False
+        user = User(username=user,email=user_email,password=user_password,
+                    shipping_address=None, postal_code=None, balance=100)
+        db.session.add(user)
+        db.session.commit()
 
 
 class Product(db.Model):
@@ -162,3 +231,43 @@ def update_product(title, new_price=None, new_title=None,
     product_to_be_updated.last_date_modified = date.today()
     # update datetime to new datetime value
     # values are only updated if user entry field is filled --> else default
+
+
+class review(db.Model):
+    """
+    Class to represent a product review
+
+    Attributes:
+        - review_ID = to uniquely identify a review and for easy extraction 
+          from database structure
+        - user_email =  identifies what user created the review
+        - review = a string containing the customers product review
+        - review_time = the time at which the review was submitted 
+        -score = rating given to the product by the reviewer
+        -product_ID = the product ID of the product being reviewed
+    """
+
+    review_ID = db.Column(db.Integer, primary_key=True)
+    user_email = db.Column(db.String(80),nullable=False)
+    score = db.Column(db.Integer,nullable=False)
+    review = db.Column(db.String(400),nullable=True)
+    review_time = db.Column(db.String(80))
+    product_ID = db.Column(db.Integer,nullable=False)
+
+    
+class transaction(db.Model, User, Product):
+    """
+    Class to represent each transaction 
+
+    Attributes:
+        - transaction_id = to uniquely identify a transaction and for easy extraction 
+          from database structure
+        - user_email =  identifies what user bought the product
+        -product_ID = the product ID of the product that was sold
+        -price = the price the product was sold for
+    """
+
+    transaction_id = db.Column(db.Integer, primary_key=True)
+    user_email = db.Column(db.String(80),primary_key=True)
+    product_ID = db.Column(db.Integer,primary_key=True)
+    price = db.Column(db.Integer,primary_key=True)
