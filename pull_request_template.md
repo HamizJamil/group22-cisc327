@@ -1,9 +1,9 @@
 # Pull Request Template
 
 ## Description
-- Include Summary of Change -> updated product entity to meet stakeholders requirements and added two functions -> one to register the product in the database and the other to update the product
-- Include why you made this change and how it benifit the stakeholders -> This will allow us to register products on frontend and allow users to change certain attributes to more accurately advertise their products
-- What are the requirements for this change -> no new requiements needed
+- Include Summary of Change -> Updated user class to meet customer requirements and added login function to retrieve user information from database
+- Include why you made this change and how it benefit the stakeholders -> This allows us to actively verify valid users on our site and allow them to log into the site through their credentials
+- What are the requirements for this change -> no new requirements needed
 
 
 ## Type of Chanage
@@ -16,8 +16,11 @@
 
 ## Testing
 - Please list the tests you have made to prove the efficiency/validation of the change
+	-> Created a log in test that would both succeed and fail to check valid error outputs and confirm the function works as intended
 - List the instructions to replicate the test
+	-> Create a new User() object using register_user(), then user login() function with specified parameters to replicate the test
 - List any other important details for testing
+	-> N/A
 
 ## Format Checklist
 - [x] avoid excessive whitepsace and unecessary brackets or spacing for concision

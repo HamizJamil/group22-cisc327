@@ -69,7 +69,6 @@ class User(db.Model):
                                         self.shipping_address, 
                                         self.postal_code, 
                                         self.balance)
-    
 
 
     def register_user(user,user_email,user_password):
