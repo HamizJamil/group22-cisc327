@@ -1,10 +1,9 @@
 # Pull Request Template
 
 ## Description
-- add variables to user class
-- add functionality for registering user 
-- add class for review
-- add class for transaction
+- Include Summary of Change -> updated product entity to meet stakeholders requirements and added two functions -> one to register the product in the database and the other to update the product
+- Include why you made this change and how it benifit the stakeholders -> This will allow us to register products on frontend and allow users to change certain attributes to more accurately advertise their products
+- What are the requirements for this change -> no new requiements needed
 
 
 ## Type of Chanage
@@ -16,7 +15,9 @@
 [ ] Logic/Control
 
 ## Testing
-
+- Please list the tests you have made to prove the efficiency/validation of the change
+- List the instructions to replicate the test
+- List any other important details for testing
 
 ## Format Checklist
 - [x] avoid excessive whitepsace and unecessary brackets or spacing for concision
@@ -47,4 +48,4 @@
 - A user can add money to their account through online banking (transfer directly from their own banking account).
 
 ## Approval 
-[] Approved by Reviewing Team Members
+[x] Approved by Reviewing Team Members

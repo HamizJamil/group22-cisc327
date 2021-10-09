@@ -4,6 +4,7 @@ import os
 from datetime import date
 import random
 from email.utils import parseaddr
+import re
   
 basedir = os.path.abspath(os.path.dirname(__file__))  
 # accessing proper directory for db file
@@ -18,27 +19,59 @@ db = SQLAlchemy(app)
 number_of_products = 0
 number_of_reviews = 0
 special_characters = "!@#$%^&*()-+?_=,<>/"
-
-
-
-
-
-
+email_regex = '/^(?!(?>(?1)"?(?>\\\[ -~]|[^"])"?(?1)){255,})'\
+        '(?!(?>(?1)"?(?>\\\[ -~]|[^"])"?(?1)){65,}@)((?'\
+        '>(?>(?>((?>(?>(?>\x0D\x0A)?[\t ])+|(?>[\t ]'\
+        '*\x0D\x0A)?[\t ]+)?)(\((?>(?2)(?>[\x01-\x08\x0B\x0C\x0E'\
+        '-\'*-\[\]-\x7F]|\\\[\x00-\x7F]|(?3)))*(?2)\)))+(?2))|(?2))'\
+        '?)([!#-\'*+\/-9=?^-~-]+|"(?>(?2)(?>[\x01-\x08\x0B\x0C\x0E'\
+        '-!#-\[\]-\x7F]|\\\[\x00-\x7F]))*(?2)")(?>(?1)\.(?1)(?4))*(?1)'\
+        '@(?!(?1)[a-z\d-]{64,})(?1)(?>([a-z\d](?>[a-z\d-]*[a-z\d])?)(?>'\
+        '(?1)\.(?!(?1)[a-z\d-]{64,})(?1)(?5)){0,126}|\[(?:(?>IPv6:(?>('\
+        '[a-f\d]{1,4})(?>:(?6)){7}|(?!(?:.*[a-f\d][:\]]){8,})((?6)(?>:'\
+        '(?6)){0,6})?::(?7)?))|(?>(?>IPv6:(?>(?6)(?>:(?6)){5}:|(?!(?:.*'\
+        '[a-f\d]:){6,})(?8)?::(?>((?6)(?>:(?6)){0,4}):)?))?(25[0-5]|'\
+        '2[0-4]\d|1\d{2}|[1-9]?\d)(?>\.(?9)){3}))\])(?1)$/isD'
 
 
 class User(db.Model):
-    __tablename__ = 'User'
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(120), unique=False, nullable=False)
-    shipping_address= db.Column(db.String(120), nullable=True)
-    postal_code = db.Column(db.String(120), nullable=True)
-    balance = db.Column(db.Integer, nullable=False)
+    """
+    Class to represent a user who has registered for the "ebay" site
 
+    Attributes:
+        - email = An email address associated to the users' account, 
+          used to log in and identify the user
+        - username = A user chosen name which is associated with the
+          users account, maximum 20 characters long
+        - password = A password associated to the users account, used
+          in conjunction with email to log in
+        - shipping_address = Shipping address for the user, can be left
+          empty upon registration
+        - postal_code = Postal code associated with users' address, can
+          be left empty upon registration
+        - balance = An integer amount representing the amount of currency
+          in the users account to be spent or withdrawn
+    """
+    __tablename__ = 'User'
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    user_name = db.Column(db.String(20), unique=True, nullable=False)
+    password = db.Column(db.String(120), primary_key=True)
+    shipping_address = db.Column(db.String(120), nullable=True)
+    postal_code = db.Column(db.String(20), nullable=True)
+    balance = db.Column(db.Integer, primary_key=True)
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return """<User(email= {}, user_name= {}, password= {},
+                shipping_address= {}, postal_code= {},
+                balance= {})>""".format(self.email,
+                                        self.user_name, 
+                                        self.password, 
+                                        self.shipping_address, 
+                                        self.postal_code, 
+                                        self.balance)
     
+
+
     def register_user(user,user_email,user_password):
         if user_email is None:
             print("ERROR: you must enter a username.")
@@ -51,7 +84,8 @@ class User(db.Model):
         if user_taken > 0:
             print("This username is taken by an existing user. Please choose another.")
             return False
-        # if email format is incorrect 
+        match = re.fullmatch(email_regex, user_email)
+        if not match:
             print("ERROR: Please enter a valid email address.")
             return False
         if len(user_password)<6:
@@ -93,6 +127,42 @@ class User(db.Model):
                     shipping_address=None, postal_code=None, balance=100)
         db.session.add(user)
         db.session.commit()
+
+
+    def login(email, password):
+        if email is None:
+            print("ERROR: you must enter a username.")
+            return False
+        if password is None: 
+            print("ERROR: you must enter a password.")
+            return False
+        if len(password)<6:
+            print("ERROR: Incorrect password.")
+            return False
+        if not any(c in special_characters for c in password):
+            print("ERROR: Incorrect password.")
+            return False
+        for char in password:
+            i = char.isupper()
+            if i == True:
+                break
+            if i is not True:
+                print("ERROR: Incorrect password.")
+                return False
+        for char in password:
+            i = char.islower()
+            if i == True:
+                break
+            if i is not True:
+                print("ERROR: Incorrect password.")
+                return False
+        match = re.fullmatch(email_regex, email)
+        if not match:
+            print("Incorrect email.")
+            return False
+        retrieved_user = db.query(User).filter(User.email==email, User.password==password)
+        return retrieved_user.first()
+        
 
 
 class Product(db.Model):
