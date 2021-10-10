@@ -20,26 +20,19 @@ number_of_reviews = 0
 special_characters = "!@#$%^&*()-+?_=,<>/"
 
 
-
-
-
-
-
-
 class User(db.Model):
     __tablename__ = 'User'
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), unique=False, nullable=False)
-    shipping_address= db.Column(db.String(120), nullable=True)
+    shipping_address = db.Column(db.String(120), nullable=True)
     postal_code = db.Column(db.String(120), nullable=True)
     balance = db.Column(db.Integer, nullable=False)
-
 
     def __repr__(self):
         return '<User %r>' % self.username
     
-    def register_user(user,user_email,user_password):
+    def register_user(user, user_email,user_password):
         if user_email is None:
             print("ERROR: you must enter a username.")
             return False
