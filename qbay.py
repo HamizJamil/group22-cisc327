@@ -5,14 +5,14 @@ from datetime import date
 import random
 from email.utils import parseaddr
 import re
-  
-basedir = os.path.abspath(os.path.dirname(__file__))  
+
+basedir = os.path.abspath(os.path.dirname(__file__))
 # accessing proper directory for db file
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
     os.path.join(basedir, 'db.sqlite')
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # ignore overhead restrictions
 db = SQLAlchemy(app)
 # GLOBAL VARIABLES
@@ -40,7 +40,7 @@ class User(db.Model):
     Class to represent a user who has registered for the "ebay" site
 
     Attributes:
-        - email = An email address associated to the users' account, 
+        - email = An email address associated to the users' account,
           used to log in and identify the user
         - username = A user chosen name which is associated with the
           users account, maximum 20 characters long
@@ -65,18 +65,47 @@ class User(db.Model):
         return """<User(email= {}, user_name= {}, password= {},
                 shipping_address= {}, postal_code= {},
                 balance= {})>""".format(self.email,
-                                        self.user_name, 
-                                        self.password, 
-                                        self.shipping_address, 
-                                        self.postal_code, 
+                                        self.user_name,
+                                        self.password,
+                                        self.shipping_address,
+                                        self.postal_code,
                                         self.balance)
 
+    def update_username(self, new_username):
+        if not new_username.isalnum():
+            print("ERROR: the user name has to be alphanumeric and non-empty")
+            return False
+        self.user_name = new_username
+
+    def update_shipping_address(self, new_shipping_address):
+        if not new_shipping_address.isalnum():
+            print("ERROR: the shipping address has to be alphanumeric")
+            return False
+        self.shipping_address = new_shipping_address
+
+    def update_postal_code(self, new_postal_code):
+        """
+        Checks if the entered postal code is of the form "A1A 1A1" or "A1A1A1"
+        where A represents any letter, upper or lower case, and 1 represents
+        any digit 0-9.
+        """
+        npc = new_postal_code
+        if (npc[0].isalpha() and npc[1].isdigit() and npc[2].isalpha() and
+            npc[3] == " " and npc[4].isdigit() and npc[5].isalpha() and
+                npc[6].isdigit()):
+            self.postal_code = new_postal_code
+        elif (npc[0].isalpha() and npc[1].isdigit() and npc[2].isalpha() and
+               npc[3].isdigit() and npc[4].isalpha() and npc[5].isdigit()):
+            self.postal_code = new_postal_code
+        else:
+            print("ERROR: Entered string is not a valid Canadian postal code")
+            return False
 
 def register_user(user,user_email,user_password):
     if user_email is None:
         print("ERROR: you must enter a username.")
         return False
-    if user_password is None: 
+    if user_password is None:
         print("ERROR: you must enter a password.")
         return False
     user_taken = User.query.filter_by(email=user_email).all()
@@ -132,7 +161,7 @@ def login(email, password):
     if email is None:
         print("ERROR: you must enter a username.")
         return False
-    if password is None: 
+    if password is None:
         print("ERROR: you must enter a password.")
         return False
     if len(password) < 6:
@@ -159,23 +188,22 @@ def login(email, password):
     if not match:
         print("Incorrect email.")
         return False
-    retrieved_user = db.query(User).filter(User.email == email, 
+    retrieved_user = db.query(User).filter(User.email == email,
                                            User.password == password)
     return retrieved_user.first()
-        
 
 class Product(db.Model):
     """
     Class to represent a product being added to "ebay" page by seller
 
     Attributes:
-        - Product_ID = to uniquely identify a product and for easy extraction 
+        - Product_ID = to uniquely identify a product and for easy extraction
           from database structure
         - owner_email =  identifies what user created the product to be sold
         - Price = the amount of money the seller wishes to sell the product for
-        - product_description = the qualitative and quantitative features of 
+        - product_description = the qualitative and quantitative features of
           the product described by seller
-    
+
     Methods:
         1. _innit__
         2. check_title_requriements
@@ -191,19 +219,19 @@ class Product(db.Model):
     owner_email = db.Column(db.String(80), primary_key=True, nullable=False)
     product_price = db.Column(db.Integer, primary_key=True)
     last_date_modified = db.Column(db.String(80), primary_key=True)
-    
+
     def __repr__(self):
         return """<Product(product_title= {}, product_description= {}, 
                 product_ID= {}, owner_email= {}, price= {}, 
                 last_date_modified={})>""".format(self.product_title,
-                                                  self.product_description, 
-                                                  self.product_ID, 
-                                                  self.owner_email, 
-                                                  self.product_price, 
+                                                  self.product_description,
+                                                  self.product_ID,
+                                                  self.owner_email,
+                                                  self.product_price,
                                                   self.last_date_modified)
 
 
-def create_product(title, description, owner_email, price): 
+def create_product(title, description, owner_email, price):
     # method will create product as long as it follows the site instructions
     global number_of_products
     description_size = len(str(description))
@@ -242,10 +270,10 @@ def create_product(title, description, owner_email, price):
         print("ERROR: Date Not Possible")
         return False
     id = number_of_products
-    product = Product(product_title=title, product_description=description, 
+    product = Product(product_title=title, product_description=description,
                       product_ID=id, owner_email=owner_email,
-                      product_price=price, 
-                      last_date_modified=todays_date)  
+                      product_price=price,
+                      last_date_modified=todays_date)
     # create the product object
 
     db.session.add(product)
@@ -253,7 +281,7 @@ def create_product(title, description, owner_email, price):
     number_of_products += 1  # this value used to create unique ID
 
 
-def update_product(title, new_price=None, new_title=None, 
+def update_product(title, new_price=None, new_title=None,
                    new_description=None):
     global number_of_products
     # searching for product based off unique ID
@@ -261,7 +289,7 @@ def update_product(title, new_price=None, new_title=None,
                                                     ).first()
     description_size = len(str(new_description))
     title_size = len(str(new_title))
-    # parameters are deafaulted to NONE so if no change is made the product 
+    # parameters are deafaulted to NONE so if no change is made the product
     # is unaffected -- now evaluate the changes with our site standard
     if new_price is not None:
         if new_price < int(product_to_be_updated.product_price):
@@ -307,11 +335,11 @@ class review(db.Model):
     Class to represent a product review
 
     Attributes:
-        - review_ID = to uniquely identify a review and for easy extraction 
+        - review_ID = to uniquely identify a review and for easy extraction
           from database structure
         - user_email =  identifies what user created the review
         - review = a string containing the customers product review
-        - review_time = the time at which the review was submitted 
+        - review_time = the time at which the review was submitted
         -score = rating given to the product by the reviewer
         -product_ID = the product ID of the product being reviewed
     """
@@ -323,13 +351,13 @@ class review(db.Model):
     review_time = db.Column(db.String(80))
     product_ID = db.Column(db.Integer,nullable=False)
 
-    
+
 # class transaction(db.Model, User, Product):
 #     """
-#     Class to represent each transaction 
+#     Class to represent each transaction
 
 #     Attributes:
-#         - transaction_id = to uniquely identify a transaction and for easy extraction 
+#         - transaction_id = to uniquely identify a transaction and for easy extraction
 #           from database structure
 #         - user_email =  identifies what user bought the product
 #         -product_ID = the product ID of the product that was sold
