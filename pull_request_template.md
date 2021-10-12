@@ -1,26 +1,23 @@
 # Pull Request Template
 
 ## Description
-- Include Summary of Change -> Updated user class to meet customer requirements and added login function to retrieve user information from database
-- Include why you made this change and how it benefit the stakeholders -> This allows us to actively verify valid users on our site and allow them to log into the site through their credentials
-- What are the requirements for this change -> no new requirements needed
+- Include Summary of Change -> changed format to follow PEP8 and changed title alphanumeric conditions to allow spaces
+- Include why you made this change and how it benifit the stakeholders -> this will ensure users can have titles with spaces
+- What are the requirements for this change -> N\A
 
 
 ## Type of Chanage
-[ ] Bug Fix
-[x] Added Feature
+[x] Bug Fix
+[ ] Added Feature
 [ ] Automated Process
 [ ] Computation
 [ ] Interface
 [ ] Logic/Control
 
 ## Testing
-- Please list the tests you have made to prove the efficiency/validation of the change
-	-> Created a log in test that would both succeed and fail to check valid error outputs and confirm the function works as intended
-- List the instructions to replicate the test
-	-> Create a new User() object using register_user(), then user login() function with specified parameters to replicate the test
+- Please list the tests you have made to prove the efficiency/validation of the change -> retested the update and create product
+- List the instructions to replicate the test -> in qbay_test.py create a product using createProduct then rename the title with    update product
 - List any other important details for testing
-	-> N/A
 
 ## Format Checklist
 - [x] avoid excessive whitepsace and unecessary brackets or spacing for concision

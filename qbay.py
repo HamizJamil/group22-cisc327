@@ -19,6 +19,7 @@ db = SQLAlchemy(app)
 number_of_products = 0
 number_of_reviews = 0
 special_characters = "!@#$%^&*()-+?_=,<>/"
+
 email_regex = r'/^(?!(?>(?1)"?(?>\\\[ -~]|[^"])"?(?1)){255,})\
             (?!(?>(?1)"?(?>\\\[ -~]|[^"])"?(?1)){65,}@)((?\
             >(?>(?>((?>(?>(?>\x0D\x0A)?[\t ])+|(?>[\t ]*\
@@ -31,8 +32,7 @@ email_regex = r'/^(?!(?>(?1)"?(?>\\\[ -~]|[^"])"?(?1)){255,})\
             [a-f\d]{1,4})(?>:(?6)){7}|(?!(?:.*[a-f\d][:\]]){8,})((?6)(?>:\
             (?6)){0,6})?::(?7)?))|(?>(?>IPv6:(?>(?6)(?>:(?6)){5}:|(?!(?:.*\
             [a-f\d]:){6,})(?8)?::(?>((?6)(?>:(?6)){0,4}):)?))?(25[0-5]|\
-            2[0-4]\d|1\d{2}|[1-9]?\d)(?>\.(?9)){3}))\])(?1)$/isD'\
-
+            2[0-4]\d|1\d{2}|[1-9]?\d)(?>\.(?9)){3}))\])(?1)$/isD'
 
 
 class User(db.Model):
@@ -53,13 +53,6 @@ class User(db.Model):
         - balance = An integer amount representing the amount of currency
           in the users account to be spent or withdrawn
     """
-    __tablename__ = 'User'
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    user_name = db.Column(db.String(20), unique=True, nullable=False)
-    password = db.Column(db.String(120), primary_key=True)
-    shipping_address = db.Column(db.String(120), nullable=True)
-    postal_code = db.Column(db.String(20), nullable=True)
-    balance = db.Column(db.Integer, primary_key=True)
 
     def __repr__(self):
         return """<User(email= {}, user_name= {}, password= {},
@@ -101,7 +94,7 @@ class User(db.Model):
             print("ERROR: Entered string is not a valid Canadian postal code")
             return False
 
-def register_user(user,user_email,user_password):
+def register_user(user, user_email, user_password):
     if user_email is None:
         print("ERROR: you must enter a username.")
         return False
@@ -110,48 +103,50 @@ def register_user(user,user_email,user_password):
         return False
     user_taken = User.query.filter_by(email=user_email).all()
     if user_taken > 0:
-        print("This username is taken by an existing user. Please choose another.")
+        print("This username is taken by an existing user. Please choose\
+              another.")
         return False
     match = re.fullmatch(email_regex, user_email)
     if not match:
         print("ERROR: Please enter a valid email address.")
         return False
-    if len(user_password)<6:
-                print("ERROR: Password must be longer than 6 characters.")
-                return False
+    if len(user_password) < 6:
+        print("ERROR: Password must be longer than 6 characters.")
+        return False
     if not any(c in special_characters for c in user_password):
-                print("ERROR: Password must contain atleast one special character.")
-                return False
+        print("ERROR: Password must contain atleast one special character.")
+        return False
     for char in user_password:
-        i= char.isupper()
-        if i ==True:
+        i = char.isupper()
+        if i:
             break
     if i is not True:
         print("ERROR: Password must contain atleast one upper case letter.")
         return False
     for char in user_password:
-        i= char.islower()
-        if i ==True:
+        i = char.islower()
+        if i:
             break
     if i is not True:
-                print("ERROR: Password must contain atleast one lower case letter.")
-                return False
+        print("ERROR: Password must contain atleast one lower case letter.")
+        return False
     if user is None:
-                print("ERROR: null username field.")
-                return False
+        print("ERROR: null username field.")
+        return False
     if not user.isalnum():
-                print("ERROR: username MUST be Alphanumeric")
-                return False
+        print("ERROR: username MUST be Alphanumeric")
+        return False
     if user.startswith(' '):
-                print("ERROR: No Prefixes Allowed in Username")
-                return False
+        print("ERROR: No Prefixes Allowed in Username")
+        return False
     if user.endswith(' '):
         print("ERROR: No Suffixes Allowed in Username")
         return False
     if len(user) < 3 or len(user) > 19:
-        print("ERROR: Username must be greater than 2 characters and less than 20.")
+        print("ERROR: Username must be greater than 2 characters and less than\
+              20.")
         return False
-    user = User(username=user,email=user_email,password=user_password,
+    user = User(username=user, email=user_email, password=user_password, 
                 shipping_address=None, postal_code=None, balance=100)
     db.session.add(user)
     db.session.commit()
@@ -243,8 +238,9 @@ def create_product(title, description, owner_email, price):
         print("ERROR: No Suffixes Allowed in Title")
         return False
     if not title.isalnum():
-        print("ERROR: Title MUST be Alphanumeric")
-        return False
+        if " " not in title:
+            print("ERROR: Title MUST be Alphanumeric")
+            return False
     product_exists = Product.query.filter_by(product_title=title).all()
     if len(product_exists) > 0:
         print("ERROR: Product Must Be Unique")
@@ -281,11 +277,13 @@ def create_product(title, description, owner_email, price):
     number_of_products += 1  # this value used to create unique ID
 
 
+
 def update_product(title, new_price=None, new_title=None,
+
                    new_description=None):
     global number_of_products
     # searching for product based off unique ID
-    product_to_be_updated = Product.query.filter_by(product_title=title
+    product_to_be_updated = Product.query.filter_by(product_title=search_title
                                                     ).first()
     description_size = len(str(new_description))
     title_size = len(str(new_title))
@@ -310,8 +308,9 @@ def update_product(title, new_price=None, new_title=None,
             print("ERROR: No Suffixes Allowed in Title")
             return False
         if not new_title.isalnum():
-            print("ERROR: Title MUST be Alphanumeric")
-            return False
+            if " " not in new_title:
+                print("ERROR: Title MUST be Alphanumeric")
+                return False
         product_exists = Product.query.filter_by(product_title=new_title).all()
         if len(product_exists) > 0:
             print("ERROR: Product Must Be Unique")
@@ -345,11 +344,13 @@ class review(db.Model):
     """
 
     review_ID = db.Column(db.Integer, primary_key=True)
-    user_email = db.Column(db.String(80),nullable=False)
-    score = db.Column(db.Integer,nullable=False)
-    review = db.Column(db.String(400),nullable=True)
+    user_email = db.Column(db.String(80), nullable=False)
+    score = db.Column(db.Integer, nullable=False)
+    review = db.Column(db.String(400), nullable=True)
     review_time = db.Column(db.String(80))
+
     product_ID = db.Column(db.Integer,nullable=False)
+
 
 
 # class transaction(db.Model, User, Product):
