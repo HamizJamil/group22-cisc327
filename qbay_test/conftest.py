@@ -1,5 +1,5 @@
 import os
-from qbay.models import Product, User
+from qbay.models import Product, User, Review, Transaction
 
 
 def pytest_sessionstart():
@@ -9,3 +9,5 @@ def pytest_sessionstart():
         os.remove(db_file)  # remove if so
     User.query.delete()
     Product.query.delete()
+    Review.query.delete()
+    Transaction.query.delete()
