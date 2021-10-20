@@ -33,11 +33,10 @@ class User(db.Model):
           in the users account to be spent or withdrawn
     """
     __tablename__ = 'User'
+    user_name = db.Column(db.String(20), primary_key=True, nullable=False)
     user_email = db.Column(db.String(80), primary_key=True, nullable=False)
     user_password = db.Column(db.String(100), primary_key=True, nullable=False)
-    user_name = db.Column(db.String(20), primary_key=True, nullable=False)
-    shipping_address = db.Column(db.String(80), primary_key=True,\
-                                 nullable=False)
+    shipping_address = db.Column(db.String(80), primary_key=True)
     postal_code = db.Column(db.String(6), primary_key=True)
     balance = db.Column(db.Integer, default=100, primary_key=True)
 
@@ -59,10 +58,10 @@ def register_user(user_name, user_email, user_password):
     if str(user_password) is None: 
         print("ERROR: you must enter a password.")
         return False
-    user_taken = User.query.filter_by(user_email=user_email).all()
-    if len(user_taken) > 0:
-        print("This username is taken by an existing user. Please choose\
-              another.")
+    email_taken = User.query.filter_by(user_email=user_email).all()
+    if len(email_taken) != 0:
+        print("ERROR: This email is already registered by an existing user."+
+              " Please choose another.")
         return False
     match = re.fullmatch(email_regex, user_email)
     if not match:
@@ -74,20 +73,20 @@ def register_user(user_name, user_email, user_password):
     if not any(c in special_characters for c in user_password):
         print("ERROR: Password must contain atleast one special character.")
         return False
-    for i in range(len(str(user_password))):
+    upper_count = 0
+    for i in range(len(user_password)):
         if user_password[i].isupper():
-            break
-        if i == len(user_password):
-            print("ERROR: Password must contain atleast one upper case letter\
-                  .")
-            return False    
-    for i in range(len(str(user_password))):
+            upper_count += 1
+    if upper_count == 0:
+        print("ERROR: Password does not contain captial characters.")
+        return False
+    lower_count = 0
+    for i in range(len(user_password)):
         if user_password[i].islower():
-            break
-        if i == len(user_password):
-            print("ERROR: Password must contain atleast one lower case letter\
-                  .")
-            return False 
+            lower_count += 1
+        if lower_count == 0:
+            print("ERROR: Password does not contail lower case characters.")
+            return False
     if user_name is None:
         print("ERROR: null username field.")
         return False
@@ -115,39 +114,40 @@ def register_user(user_name, user_email, user_password):
 def login(email, password):
     if email is None:
         print("ERROR: you must enter a username.")
-        return False
+        return None
     if password is None: 
         print("ERROR: you must enter a password.")
-        return False
+        return None
     if len(password) < 6:
-        print("ERROR: Incorrect password.")
-        return False
+        print("ERROR: Incorrect password length.")
+        return None
     if not any(c in special_characters for c in password):
-        print("ERROR: Incorrect password.")
-        return False
-    for char in password:
-        i = char.isupper()
-        if i is True:
-            break
-        if i is not True:
-            print("ERROR: Incorrect password.")
-            return False
-    for char in password:
-        i = char.islower()
-        if i is True:
-            break
-        if i is not True:
-            print("ERROR: Incorrect password.")
-            return False
+        print("ERROR: No Special Characters.")
+        return None
+    upper_count = 0
+    for i in range(len(password)):
+        if password[i].isupper():
+            upper_count += 1
+    if upper_count == 0:
+        print("ERROR: Password does not contain captial characters.")
+        return None
+    lower_count = 0
+    for i in range(len(password)):
+        if password[i].islower():
+            lower_count += 1
+        if lower_count == 0:
+            print("ERROR: Password does not contail lower case characters.")
+            return None
     match = re.fullmatch(email_regex, email)
     if not match:
-        print("Incorrect email.")
-        return False
-    retrieved_user = User.query.filter_by(user_email= email, \
+        print("Incorrect email format.")
+        return None
+    retrieved_user = User.query.filter_by(user_email=email,\
                                           user_password=password).all()
-    if retrieved_user > 1:
-        return False
-    return retrieved_user
+    if len(retrieved_user) != 1:
+        print(retrieved_user, "!!!!!!!")
+        return None
+    return retrieved_user[0]
         
 
 class Product(db.Model):
