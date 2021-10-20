@@ -1,4 +1,4 @@
-# group22-cisc327
+# group22-CISC/CMPE327
 
 [![Pytest-All](https://github.com/HamizJamil/qBay-22/actions/workflows/Pytest-All.yml/badge.svg)](https://github.com/HamizJamil/qBay-22/actions/workflows/Pytest-All.yml)
 
