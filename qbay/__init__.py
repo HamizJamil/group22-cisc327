@@ -1,10 +1,16 @@
 from flask import Flask
 import os
 
-basedir = os.path.abspath(os.path.dirname(__file__))  
-# accessing proper directory for db file
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
-    os.path.join(basedir, 'db.sqlite')
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  
+package_dir = os.path.dirname(
+    os.path.abspath(__file__)
+)
+
+templates = os.path.join(
+    package_dir, "templates"
+)
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db.sqlite'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = '69cae04b04756f65eabcd2c5a11c8c24'
