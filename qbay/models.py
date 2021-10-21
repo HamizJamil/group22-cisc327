@@ -139,7 +139,7 @@ def login(email, password):
         if password[i].islower():
             lower_count += 1
         if lower_count == 0:
-            print("ERROR: Password does not contail lower case characters.")
+            print("ERROR: Password does not contain lower case characters.")
             return None
     match = re.fullmatch(email_regex, email)
     if not match:
