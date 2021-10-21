@@ -1,13 +1,12 @@
 import os
-from qbay.models import Product, User, Review, Transaction
 
 
 def pytest_sessionstart():
-    print("Initializing Environment...")
+    print('INITIALIZING ENVIRONMENT..')
     db_file = 'db.sqlite'
-    if os.path.exists(db_file):  # checking if file already exists
-        os.remove(db_file)  # remove if so
-    User.query.delete()
-    Product.query.delete()
-    Review.query.delete()
-    Transaction.query.delete()
+    if os.path.exists(db_file):
+        os.remove(db_file)
+
+
+def pytest_sessionfinish():
+    pass

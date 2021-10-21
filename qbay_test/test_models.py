@@ -1,10 +1,4 @@
-from qbay.models import create_product, update_product
-from qbay.models import register_user, login, update_user
-from qbay.models import create_review, create_transaction
-from qbay_test.conftest import pytest_sessionstart
-from qbay.models import Product
-
-pytest_sessionstart()  # clearing out db before testing to repeat w same row
+from qbay.models import *
 
 
 # using assert keyword to run checks 
