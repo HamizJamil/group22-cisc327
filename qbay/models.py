@@ -2,7 +2,6 @@ from qbay import app
 from flask_sqlalchemy import SQLAlchemy
 import re
 from datetime import date
-import re
 
 
 db = SQLAlchemy(app)

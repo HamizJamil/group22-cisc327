@@ -1,18 +1,13 @@
 from flask import render_template, request, session, redirect
-from qbay.models import *
-
+from qbay.models import login, User, register_user
 from qbay import app
 
 
 @app.route('/')
 def home(user):
     # authentication still required
-
-    # fake product data below
-    products = [
-        {'name': 'Watch', 'price': 10, 'product_id': 1},
-        {'name': 'Shoes', 'price': 15, 'product_id': 2}
-    ]
+    products = [{'name': 'Watch', 'price': 10, 'product_id': 1},
+                {'name': 'Shoes', 'price': 15, 'product_id': 2}]
     return render_template('index.html', user=user, products=products)
 
 
@@ -40,4 +35,3 @@ def logout():
     if 'user_email' in session:
         session.pop('user_email', None)
     return redirect('/login')
-
