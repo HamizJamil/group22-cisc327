@@ -13,10 +13,16 @@
 <div id="products">
     {% for product in products %}
     <div>
-        <h4>name: {{ product.name }} price: {{ product.price }} <a href=''>update</a></h4>
+        <h4>name: {{ product.name }} price: {{ product.price }}</h4>
+        <a href='product.html'>Add Products</a>
+        <br>
     </div>
     {% endfor %}
 </div>
+<br>
+<a href='login.html'>Logout</a>
+<br>
+<a href='update-user.html'>Update Your Profile</a>
 
-<a href='/logout'>logout</a>
 {% endblock %}
+

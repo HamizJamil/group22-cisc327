@@ -64,9 +64,34 @@ def login_post():
         return render_template('login.html', 
                                message='Invalid login credentials')
     else:
-        session['user_email'] = user.email 
+        session['user_email'] = email 
         # user is successfully logged in, return to home page
         return redirect('/', code=303)
+
+
+@app.route('/update-user', methods=['GET'])
+def update_user():
+    return render_template('update-user.html', 
+                           message="Update Profile Information")
+
+
+@app.route('/update-user', methods=['POST'])
+def update_user_post():
+    user_email = request.form.get('user_email')
+    new_username = request.form.get('username')
+    shipping_address = request.form.get('shipping_address')
+    postal_code = request.form.get('postal_code')
+    if 'user_email' in session:
+        new_user = update_user(user_email, new_username, 
+                               shipping_address, postal_code)
+        if new_user is None:
+            return render_template('update-user.html', 
+                                   message="New information invalid")
+        else:
+            return render_template('login.html', 
+                                   message="Successfully updated profile!")
+    else: 
+        return redirect('/login')
 
 
 @app.route('/logout')
@@ -113,6 +138,8 @@ def product_creation_post():
     if user_exists == 0:
         return_message = "ERROR: Must Have A Registered Account With QBAY"
     if return_message is None:
+        new_product = create_product(product_title, product_description, 
+                                     owner_email, price)
         return render_template('product.html', message="Product Created")
     else:
         return render_template('product.html', message=return_message)
