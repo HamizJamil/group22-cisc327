@@ -2,6 +2,7 @@ from flask import render_template, request, session, redirect, flash
 from qbay.models import *
 from qbay import app
 
+
 def authenticate(inner_function):
     """
     :param inner_function: any python function that accepts a user object
@@ -96,14 +97,14 @@ def product_creation_post():
         if " " not in product_title:
             return_message = "ERROR: Title MUST be Alphanumeric"
     product_exists = Product.query.filter_by(product_title=product_title
-                                                ).all()
+                                             ).all()
     if int(len(product_exists)) > 0:
         return_message = "ERROR: Product Must Be Unique"
     if int(len(product_description)) < int(len(product_title)):
         return_message = "ERROR: Description Must Be Larger Than Title"
     if int(len(product_description)) < 20:
         return_message = ("ERROR: Description Must Be Larger Than 20" + 
-                            "Characters")
+                          "Characters")
     if int(price) > 10000:
         return_message = "ERROR: Price must be Less than $10000 CAD"
     if int(price) < 10:
