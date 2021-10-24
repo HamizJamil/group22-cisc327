@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Create Product{% endblock %}
+
+{% block content %}
+    <form action="/" method="POST">
+    <P></P>
+     <div class="col px-md-5"><div class="p-3 border bg-light">
+
+        <h3></h3>
+         <P>
+            <label for="Owner_Email"><h7><span class=" label label-primary"  >Owner_Email</span></h7></label>
+            <input type="email" "col-sm-2 control-label" id="user_email"  name = "user_email" placeholder="name@example.com">
+        </p>
+        <p>
+            <label for="title"><h7><span class=" label label-primary">Title</span></h7></label>
+        </p>
+        <p>
+            <textarea name="Title"  "col-sm-2 control-label" class="form-group w-100"></textarea>
+        </p>
+        <p>
+            <label for="Price"><h7><span class=" label label-primary">Price</label>
+             <input type="text" name="Price"/>
+        </p>
+        <p>
+             <label for="Desc"><h7><span class=" label label-primary">Description</span></h7></label>
+        </p>
+        <P>
+            <textarea name="Description" rows="7" style="height:100%" class="form-group w-100"></textarea>
+        </p>
+
+        <P>
+          <a href="CreateProduct" class="btn btn-secondary" role="button">Save</a>
+          <a href="UserHome" class="btn btn-secondary" role="button">Back</a>
+        </P>
+     </div></div>
+    </form>
+{% endblock %}
+</html>

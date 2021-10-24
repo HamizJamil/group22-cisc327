@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    {%  with messages = get_flashed_messages() %}
+        {%  if messages %}
+            {% for msg in messages %}
+                <P> {{ msg }}</P>
+            {%  endfor  %}
+        {% endif %}
+    {% endwith %}
+<div class="container-fluid">
+    <P class="text-success" >
+    <h1> You have successfully logout  </h1>
+
+    </P>
+    </P>
+
+
+        <P></P>
+        <a href="Login" class="btn btn-secondary" role="button">Login</a>
+
+
+</div>
+{% endblock %}
+</html>
