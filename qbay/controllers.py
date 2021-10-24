@@ -138,10 +138,115 @@ def product_creation_post():
     if user_exists == 0:
         return_message = "ERROR: Must Have A Registered Account With QBAY"
     if return_message is None:
-        new_product = create_product(product_title, product_description, 
+        prod = create_product(product_title, product_description,
                                      owner_email, price)
         return render_template('product.html', message="Product Created")
     else:
         return render_template('product.html', message=return_message)
 
-    
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        name = request.form.get('name')
+        password1 = request.form.get('password1')
+        password2 = request.form.get('password2')
+        if(password1 != password2):
+            return render_template("register.html", message="ERROR: passwords"
+                                   + " do not match")
+        else:
+            register = register_user(name, email, password1)
+        if register is False:
+            return render_template("register.html", message="ERROR: Invalid" +
+                                                            " username or "
+                                                            + "email.")
+        if register is False:
+            return render_template("register.html", message="Sign up" +
+                                   "successful.")
+
+    if request.method == 'GET':
+        return render_template("register.html")
+
+
+@app.route('/update-product', methods=['GET', 'POST'])
+def update_prod():
+    if request.method == 'GET':
+        return render_template("update-prod.html")
+
+    if request.method == 'POST':
+
+        if 'user' not in session:
+            return render_template("update-prod.html", message="ERROR: Must be"
+                                   + " logged in to update products.")
+
+        original_title = request.form.get('product_ID')
+        email = session['user_email']
+
+        product_to_be_updated = Product.query.filter_by(
+                                                        product_title=
+                                                        original_title,
+                                                        owner_email=email
+                                                        ).first()
+
+        original_price = product_to_be_updated.product_price
+        original_description = product_to_be_updated.product_description
+
+        if request.form.get('update_product_title') is not None:
+            if request.form.get('update_product_title').startswith(' '):
+                return_message = "ERROR: No Prefixes Allowed in Title"
+                return render_template("update-prod.html",
+                                       message=return_message)
+            if request.form.get('update_product_title').endswith(' '):
+                return_message = "ERROR: No Suffixes Allowed in Title"
+                return render_template("update-prod.html",
+                                       message=return_message)
+            if not request.form.get('update_product_title').isalnum():
+                if " " not in request.form.get('update_product_title'):
+                    return_message = "ERROR: Title must be Alphanumeric"
+                    return render_template("update-prod.html",
+                                           message=return_message)
+            else:
+                new_title = request.form.get('update_product_title')
+        if new_title is None:
+            new_title = original_title
+
+        if request.form.get('update_product_description') is not None:
+            if int(len(request.form.get('update_product_description'))) < len(
+                    new_title):
+                return_message = "ERROR: Description Must Be Larger Than Title"
+                return render_template("update-prod.html",
+                                       message=return_message)
+            if int(len(request.form.get('update_product_description'))) < 20:
+                return_message = ("ERROR: Description Must Be Larger Than 20" +
+                                  "Characters")
+                return render_template("update-prod.html",
+                                       message=return_message)
+            else:
+                new_description = request.form.get(
+                                                'update_product_description')
+        if new_description is None:
+            new_description = original_description
+
+        if request.form.get('update_product_price') is not None:
+            if request.form.get('update_product_price') < int(original_price):
+                return_message = "ERROR: Cannot Reduce Price"
+                return render_template("update-prod.html",
+                                       message=return_message)
+            if request.form.get('update_product_price') > 10000:
+                return_message = "ERROR: Price must be Less than $10000 CAD"
+                return render_template("update-prod.html",
+                                       message=return_message)
+            if request.form.get('update_product_price') < 10:
+                return_message = "ERROR: Price must be More than $10 CAD"
+                return render_template("update-prod.html",
+                                       message=return_message)
+            else:
+                new_price = request.form.get('update_product_price')
+        if new_price is None:
+            new_price = original_price
+
+        update_product(original_title, email, new_price, new_title,
+                       new_description)
+        return render_template("update-prod.html", message="Product " +
+                               "successfully updated.")
