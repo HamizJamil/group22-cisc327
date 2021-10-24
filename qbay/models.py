@@ -87,7 +87,7 @@ def register_user(user_name, user_email, user_password):
         if user_password[i].islower():
             lower_count += 1
         if lower_count == 0:
-            print("ERROR: Password does not contail lower case characters.")
+            print("ERROR: Password does not contain lower case characters.")
             return False
     if user_name is None:
         print("ERROR: null username field.")
@@ -254,16 +254,16 @@ def create_product(title, description, owner_email, price):
     if len(product_exists) > 0:
         print("ERROR: Product Must Be Unique")
         return False
-    if description_size < title_size:
+    if int(description_size) < int(title_size):
         print("ERROR: Description Must Be Larger Than Title")
         return False
-    if description_size < 20:
+    if int(description_size) < 20:
         print("ERROR: Description Must Be Larger Than 20 Characters")
         return False
-    if price > 10000:
+    if int(price) > 10000:
         print("ERROR: Price must be Less than $10000 CAD")
         return False
-    if price < 10:
+    if int(price) < 10:
         print("ERROR: Price must be 1More than $10 CAD")
         return False
     user_exists = User.query.filter_by(user_email=owner_email).first()

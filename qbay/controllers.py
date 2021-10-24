@@ -107,7 +107,7 @@ def product_creation():
 
 
 @app.route('/create-product', methods=['POST'])  # sends info to database
-def product_creation_post(): 
+def product_creation_post():
     product_title = request.form.get('product_title')
     product_description = request.form.get('product_description')
     owner_email = request.form.get('owner_email')
@@ -128,7 +128,7 @@ def product_creation_post():
     if int(len(product_description)) < int(len(product_title)):
         return_message = "ERROR: Description Must Be Larger Than Title"
     if int(len(product_description)) < 20:
-        return_message = ("ERROR: Description Must Be Larger Than 20" + 
+        return_message = ("ERROR: Description Must Be Larger Than 20" +
                           "Characters")
     if int(price) > 10000:
         return_message = "ERROR: Price must be Less than $10000 CAD"
@@ -161,8 +161,8 @@ def register():
             return render_template("register.html", message="ERROR: Invalid" +
                                                             " username or "
                                                             + "email.")
-        if register is False:
-            return render_template("register.html", message="Sign up" +
+        if register is not False:
+            return render_template("register.html", message="Sign up " +
                                    "successful.")
 
     if request.method == 'GET':
