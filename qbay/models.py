@@ -286,8 +286,8 @@ def create_product(title, description, owner_email, price):
     return True
 
 
-def update_product(search_title, owner_email, new_price, new_title, 
-                   new_description):
+def update_product(search_title, owner_email, new_price=None, new_title=None, 
+                   new_description=None):
     global number_of_products
     # searching for product based off unique ID
     product_to_be_updated = Product.query.filter_by(product_title=search_title, 
@@ -362,7 +362,7 @@ class Review(db.Model):
                                         self.reviewer_email, 
                                         self.score, 
                                         self.review)
-    
+
 
 def create_review(email, score, review):
     global number_of_reviews
