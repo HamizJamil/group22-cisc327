@@ -7,15 +7,41 @@
 {% block content %}
 <h4 id='message'>{{message}}</h4>
 <form method="post">
+  <h3 align="center">Register</h3>
   <div class="form-group">
     <label for="email">Email</label>
-    <input class="form-control" name="email" id="email" required>
+    <input 
+    class="form-control" 
+    name="email" 
+    id="email" 
+    placeholder="Enter email"
+    required 
+    />
     <label for="name">Name</label>
-    <input class="form-control" name="name" id="name" required>
-    <label for="password">Password</label>
-    <input class="form-control" type="password" name="password" id="password" required>
-    <label for="password">Confirm Password</label>
-    <input class="form-control" type="password" name="password2" id="password2" required>
+    <input class="form-control" 
+    name="name" 
+    id="name" 
+    placeholder="Name" 
+    required
+    />
+    <label for="password1">Password</label>
+    <input 
+    class="form-control" 
+    type="password1" 
+    name="password1" 
+    id="password1" 
+    placeholder="Password" 
+    required
+    />
+    <label for="password2">Confirm Password</label>
+    <input 
+    class="form-control" 
+    type="password2" 
+    name="password2" 
+    id="password2" 
+    placeholder="Confirm Password" 
+    required
+    />
     <input class="btn btn-primary" type="submit" value="Register">
   <a href='/login' class="btn btn-primary" id="btn-submit" >Login</a>
   </div>
