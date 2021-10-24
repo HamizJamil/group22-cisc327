@@ -176,12 +176,8 @@ def update_prod():
 
     if request.method == 'POST':
 
-        if 'user' not in session:
-            return render_template("update-prod.html", message="ERROR: Must be"
-                                   + " logged in to update products.")
-
         original_title = request.form.get('product_ID')
-        email = session['user_email']
+        email = request.form.get('email')
 
         product_to_be_updated = Product.query.filter_by(
                                                         product_title=
@@ -229,15 +225,16 @@ def update_prod():
             new_description = original_description
 
         if request.form.get('update_product_price') is not None:
-            if request.form.get('update_product_price') < int(original_price):
+            if int(request.form.get('update_product_price')) < int(
+                    original_price):
                 return_message = "ERROR: Cannot Reduce Price"
                 return render_template("update-prod.html",
                                        message=return_message)
-            if request.form.get('update_product_price') > 10000:
+            if int(request.form.get('update_product_price')) > 10000:
                 return_message = "ERROR: Price must be Less than $10000 CAD"
                 return render_template("update-prod.html",
                                        message=return_message)
-            if request.form.get('update_product_price') < 10:
+            if int(request.form.get('update_product_price')) < 10:
                 return_message = "ERROR: Price must be More than $10 CAD"
                 return render_template("update-prod.html",
                                        message=return_message)

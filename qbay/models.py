@@ -301,13 +301,13 @@ def update_product(search_title, owner_email, new_price=None, new_title=None,
         print("No product by that search filter")
         return None
     if new_price is not None:
-        if new_price < int(product_to_be_updated.product_price):
+        if int(new_price) < int(product_to_be_updated.product_price):
             print("ERROR: Cannot Reduce Price")
             return None
-        if new_price > 10000:
+        if int(new_price) > 10000:
             print("ERROR: Price must be Less than $10000 CAD")
             return None
-        if new_price < 10:
+        if int(new_price) < 10:
             print("ERROR: Price must be 1More than $10 CAD")
             return None
         product_to_be_updated.product_price = new_price
