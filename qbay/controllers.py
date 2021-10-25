@@ -1,12 +1,13 @@
-from flask import render_template, request, session, redirect, flash
-from qbay.models import *
+from flask import render_template, request, session, redirect
+from qbay.models import create_product, User, login, register_user
+from qbay.models import update_product, update_user, Product
 from qbay import app
 
 
 def authenticate(inner_function):
     """
     :param inner_function: any python function that accepts a user object
-    Wrap any python function and check the current session to see if 
+    Wrap any python function and check the current session to see if
     the user has logged in. If login, it will call the inner_function
     with the logged in user object.
     To wrap a function, we can put a decoration on that function.
@@ -31,7 +32,7 @@ def authenticate(inner_function):
                 pass
         else:
             # else, redirect to the login page
-            return redirect('/login')
+            return render_template('login.html', message='Please login')
 
     # return the wrapped version of the inner_function:
     return wrapped_inner
@@ -60,18 +61,18 @@ def login_post():
     email = request.form.get('email')
     password = request.form.get('password')
     user = login(email, password)
-    if user is None: 
-        return render_template('login.html', 
+    if user is None:
+        return render_template('login.html',
                                message='Invalid login credentials')
     else:
-        session['user_email'] = email 
+        session['user_email'] = email
         # user is successfully logged in, return to home page
         return redirect('/', code=303)
 
 
 @app.route('/update-user', methods=['GET'])
-def update_user():
-    return render_template('update-user.html', 
+def update_user_get():
+    return render_template('update-user.html',
                            message="Update Profile Information")
 
 
@@ -82,15 +83,15 @@ def update_user_post():
     shipping_address = request.form.get('shipping_address')
     postal_code = request.form.get('postal_code')
     if 'user_email' in session:
-        new_user = update_user(user_email, new_username, 
+        new_user = update_user(user_email, new_username,
                                shipping_address, postal_code)
         if new_user is None:
-            return render_template('update-user.html', 
+            return render_template('update-user.html',
                                    message="New information invalid")
         else:
-            return render_template('login.html', 
+            return render_template('login.html',
                                    message="Successfully updated profile!")
-    else: 
+    else:
         return redirect('/login')
 
 
@@ -101,8 +102,8 @@ def logout():
     return redirect('/login')
 
 
-@app.route('/create-product', methods=['GET']) 
-def product_creation(): 
+@app.route('/create-product', methods=['GET'])
+def product_creation():
     return render_template('product.html', message="Create Product")
 
 
@@ -138,8 +139,8 @@ def product_creation_post():
     if user_exists == 0:
         return_message = "ERROR: Must Have A Registered Account With QBAY"
     if return_message is None:
-        prod = create_product(product_title, product_description,
-                                     owner_email, price)
+        create_product(product_title, product_description,
+                       owner_email, price)
         return render_template('product.html', message="Product Created")
     else:
         return render_template('product.html', message=return_message)
@@ -180,9 +181,8 @@ def update_prod():
         email = request.form.get('email')
 
         product_to_be_updated = Product.query.filter_by(
-                                                        product_title=
-                                                        original_title,
-                                                        owner_email=email
+                                                product_title=original_title,
+                                                owner_email=email
                                                         ).first()
 
         original_price = product_to_be_updated.product_price
