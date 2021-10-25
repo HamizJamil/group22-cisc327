@@ -42,12 +42,8 @@ def authenticate(inner_function):
 
 
 @app.route('/')
-def home(user):
-    # authentication still required
-    user = []
-    products = [{'name': 'Watch', 'price': 10, 'product_id': 1},
-                {'name': 'Shoes', 'price': 15, 'product_id': 2}]
-    return render_template('index.html', user=user, products=products)
+def home():
+    return render_template('home.html')
 
 
 @app.route('/login', methods=['GET'])
