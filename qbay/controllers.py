@@ -41,13 +41,14 @@ def authenticate(inner_function):
 # PUT is used to send data to a server to create/update a resource.
 
 
-@app.route('/')
-def home(user):
-    # authentication still required
-    user = []
-    products = [{'name': 'Watch', 'price': 10, 'product_id': 1},
-                {'name': 'Shoes', 'price': 15, 'product_id': 2}]
-    return render_template('index.html', user=user, products=products)
+@app.route("/", methods=["POST","GET"])
+def home():
+    if request.method == "POST":
+        user=request.form["user_email"]
+        session["user"] = user
+        return render_template("home.html")
+    else:
+        return render_template("home.html")
 
 
 @app.route('/login', methods=['GET'])
