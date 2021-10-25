@@ -218,7 +218,7 @@ def update_prod():
                                        message=return_message)
             else:
                 new_description = request.form.get(
-                        'update_product_description')
+                    'update_product_description')
         if new_description is None:
             new_description = original_description
 
