@@ -181,9 +181,7 @@ def update_prod():
         email = request.form.get('email')
 
         product_to_be_updated = Product.query.filter_by(
-                                                product_title=original_title,
-                                                owner_email=email
-                                                        ).first()
+            product_title=original_title, owner_email=email).first()
 
         original_price = product_to_be_updated.product_price
         original_description = product_to_be_updated.product_description
@@ -220,7 +218,7 @@ def update_prod():
                                        message=return_message)
             else:
                 new_description = request.form.get(
-                                                'update_product_description')
+                        'update_product_description')
         if new_description is None:
             new_description = original_description
 
