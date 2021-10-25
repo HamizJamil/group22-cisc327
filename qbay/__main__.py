@@ -1,7 +1,4 @@
 from qbay.__init__ import app
-from qbay.models import *
-from qbay.controllers import *
-import os
 
 
 FLASK_PORT = 8081
