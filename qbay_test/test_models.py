@@ -48,8 +48,7 @@ def test_r6_create_review():
 
 
 def test_r7_create_transaction():
-    product_bought = Product.query.filter_by(product_title='iPhone11X Pro'
+    product_bought = Product.query.filter_by(title='iPhone11X Pro'
                                              ).first()
-    ID = product_bought.product_ID
-    price = product_bought.product_price
-    assert create_transaction('test1@test.com', ID, price)
+    price = product_bought.price
+    assert create_transaction('test1@test.com', price)

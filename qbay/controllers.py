@@ -1,243 +1,164 @@
-from flask import render_template, request, session, redirect
-from qbay.models import create_product, User, login, register_user
-from qbay.models import update_product, update_user, Product
+from flask import Flask, redirect, url_for, render_template
+from flask import request, session, flash
+from datetime import date
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm.attributes import flag_modified
 from qbay import app
+from qbay.models import *
 
 
-def authenticate(inner_function):
-    """
-    :param inner_function: any python function that accepts a user object
-    Wrap any python function and check the current session to see if
-    the user has logged in. If login, it will call the inner_function
-    with the logged in user object.
-    To wrap a function, we can put a decoration on that function.
-    Example:
-    @authenticate
-    def home_page(user):
-        pass
-    """
-
-    def wrapped_inner():
-
-        # check did we store the key in the session
-        if 'logged_in' in session:
-            email = session['logged_in']
-            try:
-                user = User.query.filter_by(email=email).one_or_none()
-                if user:
-                    # if the user exists, call the inner_function
-                    # with user as parameter
-                    return inner_function(user)
-            except Exception:
-                pass
+@app.route("/login", methods=["POST", "GET"])
+def login():
+    if request.method == "POST":
+        email = request.form["user_email"]
+        password = request.form["user_pass"]
+        session.permanent = True
+        found_user = User.query.filter_by(email=email).first()
+        if found_user and password == found_user.password:
+            session["user"] = email
+            return render_template("userhome.html")
         else:
-            # else, redirect to the login page
-            return render_template('login.html', message='Please login')
-
-    # return the wrapped version of the inner_function:
-    return wrapped_inner
-
-# GET is used to request data from a specified resource.
-# POST is used to send data to a server to create/update a resource.
-# PUT is used to send data to a server to create/update a resource.
-
-
-@app.route('/')
-def home():
-    return render_template('home.html')
-
-
-@app.route('/login', methods=['GET'])
-def login_get():
-    return render_template('login.html', message='Please login')
-
-
-@app.route('/login', methods=['POST'])
-def login_post():
-    email = request.form.get('email')
-    password = request.form.get('password')
-    user = login(email, password)
-    if user is None:
-        return render_template('login.html',
-                               message='Invalid login credentials')
+            flash("The email or password provided are wrong")
+            return render_template("login.html")
     else:
-        session['user_email'] = email
-        # user is successfully logged in, return to home page
-        return redirect('/', code=303)
+        return render_template("login.html")
 
 
-@app.route('/update-user', methods=['GET'])
-def update_user_get():
-    return render_template('update-user.html',
-                           message="Update Profile Information")
-
-
-@app.route('/update-user', methods=['POST'])
-def update_user_post():
-    user_email = request.form.get('user_email')
-    new_username = request.form.get('username')
-    shipping_address = request.form.get('shipping_address')
-    postal_code = request.form.get('postal_code')
-    if 'user_email' in session:
-        new_user = update_user(user_email, new_username,
-                               shipping_address, postal_code)
-        if new_user is None:
-            return render_template('update-user.html',
-                                   message="New information invalid")
+@app.route("/createproduct", methods=["POST", "GET"])
+def create_product():
+    if request.method == "POST":
+        owner_email = request.form["user_email"]
+        print(owner_email)
+        curr_user = User.query.filter_by(email=owner_email).first()
+        title = request.form["title"]
+        description = request.form["description"]
+        found_Prod = Product.query.filter_by(title=title).first()
+        print(title, len(title))
+        if title.startswith(" ") or title.endswith(" ") or \
+                not title.replace(" ", "").isalnum():
+            flash("The title of the product has to be alphanumeric-only, "
+                  "and space allowed only if it is not as prefix and suffix")
+            return render_template("createproduct.html")
+        elif len(title) > 80:
+            flash("The title's too long")
+            return render_template("createproduct.html")
+        elif len(description) < len(title) or len(description) < 20 \
+                or len(description) > 2000:
+            flash("Description needs to be longer than the title and between"
+                  "20 adn 2000 characters long")
+            return render_template("createproduct.html")
+        elif found_Prod:
+            flash("This product is already created! Please use update or" +
+                  "add a new title")
+            return render_template("createproduct.html")
+        elif not curr_user:
+            flash("Sorry must have a valid Qbay account to create a product")
+            return render_template("createproduct.html")
         else:
-            return render_template('login.html',
-                                   message="Successfully updated profile!")
+            price = request.form["price"]
+            product = Product(title, int(price), description, owner_email)
+            db.session.add(product)
+            db.session.commit()
+            return render_template("userhome.html")
     else:
-        return redirect('/login')
+        return render_template("createproduct.html")
 
 
-@app.route('/logout')
+@app.route("/registration", methods=["POST", "GET"])
+def registration():
+    if request.method == "POST":
+        email = request.form["user_email"]
+        session["user"] = email
+        session.permanent = True
+        password = request.form["user_pass"]
+        user_name = request.form["user_name"]
+        found_user = User.query.filter_by(email=email).first()
+        print(found_user, "!!!!!!!!!!!!!!!!!!!!!!!")
+        if found_user is not None:
+            flash("This user is already registered! Please log in:")
+            return redirect(url_for("login"))
+        elif email_regex.search(email) is None: 
+            # if email provided is not RFC 5322
+            flash("Please provide a valid email address")
+            return redirect(url_for("registration"))
+        elif user_name.startswith(" ") or user_name.endswith(" "):
+            flash("User name can't start or end with a space.")
+            return redirect(url_for("registration"))
+        elif not user_name.isalnum():
+            flash("User name has to be alpha-numeric.")
+            return redirect(url_for("registration"))
+        elif len(user_name) < 2 or len(user_name) > 20:
+            flash("User name has to be between 2 and 20 characters long.")
+            return redirect(url_for("registration"))
+        elif password_regex.search(password) is None:
+            flash("Password has to be minimum length 6,"
+                  " at least one upper case, at least one lower case,"
+                  " and at least one special character [@#$%^&+=]", "info")
+            return redirect(url_for("registration"))
+        else:
+            usr = User(email, user_name, password)
+            db.session.add(usr)
+            db.session.commit()
+            return redirect(url_for("login"))
+    else:
+        return render_template("registration.html")
+
+
+@app.route("/logout", methods=["POST", "GET"])
 def logout():
-    if 'user_email' in session:
-        session.pop('user_email', None)
-    return redirect('/login')
-
-
-@app.route('/create-product', methods=['GET'])
-def product_creation():
-    return render_template('product.html', message="Create Product")
-
-
-@app.route('/create-product', methods=['POST'])  # sends info to database
-def product_creation_post():
-    product_title = request.form.get('product_title')
-    product_description = request.form.get('product_description')
-    owner_email = request.form.get('owner_email')
-    price = request.form.get('product_price')
-    return_message = None
-
-    if product_title.startswith(' '):
-        return_message = "ERROR: No Prefixes Allowed in Title"
-    if product_title.endswith(' '):
-        return_message = "ERROR: No Suffixes Allowed in Title"
-    if not product_title.isalnum():
-        if " " not in product_title:
-            return_message = "ERROR: Title MUST be Alphanumeric"
-    product_exists = Product.query.filter_by(product_title=product_title
-                                             ).all()
-    if int(len(product_exists)) > 0:
-        return_message = "ERROR: Product Must Be Unique"
-    if int(len(product_description)) < int(len(product_title)):
-        return_message = "ERROR: Description Must Be Larger Than Title"
-    if int(len(product_description)) < 20:
-        return_message = ("ERROR: Description Must Be Larger Than 20" +
-                          "Characters")
-    if int(price) > 10000:
-        return_message = "ERROR: Price must be Less than $10000 CAD"
-    if int(price) < 10:
-        return_message = "ERROR: Price must be More than $10 CAD"
-    user_exists = User.query.filter_by(user_email=owner_email).first()
-    if user_exists == 0:
-        return_message = "ERROR: Must Have A Registered Account With QBAY"
-    if return_message is None:
-        create_product(product_title, product_description,
-                       owner_email, price)
-        return render_template('product.html', message="Product Created")
+    if request.method == "POST":
+        session.permanent(True)
+        usr = session["user"]
+        session.pop("usr", None)
+        flash("You have been logged out successfully!", "info")
+        return redirect(url_for("logout.html", usr))
     else:
-        return render_template('product.html', message=return_message)
+        return render_template("home.html")
 
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        name = request.form.get('name')
-        password1 = request.form.get('password1')
-        password2 = request.form.get('password2')
-        if(password1 != password2):
-            return render_template("register.html", message="ERROR: passwords"
-                                   + " do not match")
+@app.route("/", methods=["POST", "GET"])
+def home():
+    if request.method == "POST":
+        user = request.form["user_email"]
+        session["user"] = user
+        return render_template("home.html")
+    else:
+        return render_template("home.html")
+
+
+@app.route("/updateprofile", methods=["POST", "GET"])
+def update_profile():
+    print("user profile")
+    user_found = User.query.filter_by(email=session["user"]).first()
+    print(user_found)
+    if request.method == "POST":
+        print(request.form["shipping_address"])
+        print(request.form["postal_code"])
+        user_found.postal_code = request.form["postal_code"]
+        if postal_regex.search(user_found.postal_code) is None:
+            flash("ERROR: Please enter a valid postal code", "info")
+        user_found.shipping_address = request.form["shipping_address"]
+        db.session.commit()
+    return render_template("updateprofile.html")
+
+
+@app.route("/updateproduct", methods=["POST", "GET"])
+def update_product():
+    if request.method == "POST":
+        title = request.form["title"]
+        Prod_found = Product.query.filter_by(title=title).first()
+        print(Prod_found)
+        if Prod_found is None:
+            flash("record Not found")
         else:
-            register = register_user(name, email, password1)
-        if register is False:
-            return render_template("register.html", message="ERROR: Invalid" +
-                                                            " username or "
-                                                            + "email.")
-        if register is not False:
-            return render_template("register.html", message="Sign up " +
-                                   "successful.")
-
-    if request.method == 'GET':
-        return render_template("register.html")
+            Prod_found.description = request.form["Description"]
+            Prod_found.price = request.form["price"]
+            db.session.commit()
+            return render_template("updateproduct.html")
+    else:
+        return render_template("updateproduct.html")
 
 
-@app.route('/update-product', methods=['GET', 'POST'])
-def update_prod():
-    if request.method == 'GET':
-        return render_template("update-prod.html")
-
-    if request.method == 'POST':
-
-        original_title = request.form.get('product_ID')
-        email = request.form.get('email')
-
-        product_to_be_updated = Product.query.filter_by(
-            product_title=original_title, owner_email=email).first()
-
-        original_price = product_to_be_updated.product_price
-        original_description = product_to_be_updated.product_description
-
-        if request.form.get('update_product_title') is not None:
-            if request.form.get('update_product_title').startswith(' '):
-                return_message = "ERROR: No Prefixes Allowed in Title"
-                return render_template("update-prod.html",
-                                       message=return_message)
-            if request.form.get('update_product_title').endswith(' '):
-                return_message = "ERROR: No Suffixes Allowed in Title"
-                return render_template("update-prod.html",
-                                       message=return_message)
-            if not request.form.get('update_product_title').isalnum():
-                if " " not in request.form.get('update_product_title'):
-                    return_message = "ERROR: Title must be Alphanumeric"
-                    return render_template("update-prod.html",
-                                           message=return_message)
-            else:
-                new_title = request.form.get('update_product_title')
-        if new_title is None:
-            new_title = original_title
-
-        if request.form.get('update_product_description') is not None:
-            if int(len(request.form.get('update_product_description'))) < len(
-                    new_title):
-                return_message = "ERROR: Description Must Be Larger Than Title"
-                return render_template("update-prod.html",
-                                       message=return_message)
-            if int(len(request.form.get('update_product_description'))) < 20:
-                return_message = ("ERROR: Description Must Be Larger Than 20" +
-                                  "Characters")
-                return render_template("update-prod.html",
-                                       message=return_message)
-            else:
-                new_description = request.form.get(
-                    'update_product_description')
-        if new_description is None:
-            new_description = original_description
-
-        if request.form.get('update_product_price') is not None:
-            if int(request.form.get('update_product_price')) < int(
-                    original_price):
-                return_message = "ERROR: Cannot Reduce Price"
-                return render_template("update-prod.html",
-                                       message=return_message)
-            if int(request.form.get('update_product_price')) > 10000:
-                return_message = "ERROR: Price must be Less than $10000 CAD"
-                return render_template("update-prod.html",
-                                       message=return_message)
-            if int(request.form.get('update_product_price')) < 10:
-                return_message = "ERROR: Price must be More than $10 CAD"
-                return render_template("update-prod.html",
-                                       message=return_message)
-            else:
-                new_price = request.form.get('update_product_price')
-        if new_price is None:
-            new_price = original_price
-
-        update_product(original_title, email, new_price, new_title,
-                       new_description)
-        return render_template("update-prod.html", message="Product " +
-                               "successfully updated.")
+@app.route("/userhome", methods=["POST", "GET"])
+def user_home():
+    return render_template("userhome.html")

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+
+    <form action="/" method="POST">
+    <h2>Congratulations! You are using one of the best online shopping websites</h2>
+           <h4>
+            <P> We provide you a opportunity to present your products and do your business</P>
+            <P>Please add a new product or update the information of current products.</P> </h4>
+            <P></P>
+        <P>
+            <label for="NewProd"><h5><span class="btn btn-Light">New Product:</span></h5></label>
+            <a href="createproduct" class="btn btn-secondary" role="button">Add Product</a>
+        </P><P>
+            <label for="updateProd"><h5><span class="btn btn-Light">Update existing products :</span></h5></label>
+            <a href="updateproduct" class="btn btn-secondary" role="button">Update Product</a>
+        </P>
+
+    </form>
+{% endblock %}
+</html>

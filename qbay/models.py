@@ -1,56 +1,95 @@
-from qbay import app
-from flask_sqlalchemy import SQLAlchemy
-import re
+from flask import Flask, redirect, url_for, render_template
+from flask import request, session, flash
 from datetime import date
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm.attributes import flag_modified
+from qbay import app
 
+import re  # regular expression library
+# email RFC 5322 constraint
+email_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+password_regex = re.compile(r"^(?=.{6,})(?=.*[a-z])(?=.*[A-Z])" +
+                            r"(?=.*[!@#$%^&+=]).*$")
+postal_regex = re.compile(r"[A-Za-z][0-9][A-Za-z] [0-9][A-Za-z][0-9]")
 
 db = SQLAlchemy(app)
-# GLOBAL VARIABLES
-number_of_products = 0
-number_of_reviews = 0
-number_of_transactions = 0
-special_characters = "!@#$%^&*()-+?_=,<>/"
-email_regex = r"[a-zA-Z0-9]+@[a-zA-Z]+\.(com|edu|ca|net)"
-postal_regex = r"[A-Za-z][0-9][A-Za-z] [0-9][A-Za-z][0-9]"
 
 
 class User(db.Model):
-    """
-    Class to represent a user who has registered for the "ebay" site
+    email = db.Column(db.String(50), primary_key=True, unique=True)
+    user_name = db.Column(db.String(20), index=True, unique=False)
+    password = db.Column(db.String(100), unique=False, nullable=False)
+    shipping_address = db.Column(db.String(100), index=True, unique=False)
+    postal_code = db.Column(db.String(7), index=True, unique=False)
+    balance = db.Column(db.Integer, index=True, unique=False)
+    # relationship between User and other Models
+    products = db.relationship('Product', backref='user', lazy='dynamic')
+    reviews = db.relationship('Review', backref='user', lazy='dynamic')
+    transactions = db.relationship('Transaction', backref='user', 
+                                   lazy='dynamic')
 
-    Attributes:
-        - email = An email address associated to the users' account,
-          used to log in and identify the user
-        - username = A user chosen name which is associated with the
-          users account, maximum 20 characters long
-        - password = A password associated to the users account, used
-          in conjunction with email to log in
-        - shipping_address = Shipping address for the user, can be left
-          empty upon registration
-        - postal_code = Postal code associated with users' address, can
-          be left empty upon registration
-        - balance = An integer amount representing the amount of currency
-          in the users account to be spent or withdrawn
-    """
-    __tablename__ = 'User'
-    user_name = db.Column(db.String(20), primary_key=True, nullable=False)
-    user_email = db.Column(db.String(80), primary_key=True, nullable=False)
-    user_password = db.Column(db.String(100), primary_key=True, nullable=False)
-    shipping_address = db.Column(db.String(80), default="", nullable=True,
-                                 primary_key=True)
-    postal_code = db.Column(db.String(6), default="", nullable=True,
-                            primary_key=True)
-    balance = db.Column(db.Integer, default=100, primary_key=True)
+    def __init__(self, email, user_name, password, shipping=None, 
+                 post=None, balance=100):
+        self.email = email
+        self.user_name = user_name
+        self.password = password
+        self.shipping_address = shipping
+        self.postal_code = post
+        self.balance = balance
 
     def __repr__(self):
-        return """<User(user_email= {}, user_name= {}, user_password= {},
-                shipping_address= {}, postal_code= {},
-                balance= {})>""".format(self.user_email,
-                                        self.user_name,
-                                        self.user_password,
-                                        self.shipping_address,
-                                        self.postal_code,
-                                        self.balance)
+        return "User: {}".format(self.user_name, self.email)
+
+
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(80), index=True, unique=True, nullable=False)
+    description = db.Column(db.String(2000), index=True, unique=False)
+    price = db.Column(db.Float, index=True, unique=False)
+    owner_email = db.Column(db.String, db.ForeignKey('user.email'))
+    last_date_modified = db.Column(db.String(20), index=True, unique=False)
+
+    def __init__(self, title, price, description, owner_email,
+                 today=str(date.today())):
+        self.title = title
+        self.price = price
+        self.description = description
+        self.owner_email = owner_email
+        self.last_date_modified = today
+
+    def __repr__(self):
+        return "Product {}: {} Price: {}".format(self.id, self.title, 
+                                                 self.price)
+
+
+class Transaction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    price = db.Column(db.Float, index=True, unique=False)
+    buyer = db.Column(db.String, db.ForeignKey('user.email'))
+
+    def __repr__(self):
+        return "Transaction {}: {}, date: {}".format(self.id, self.product,
+                                                     self.date)
+    
+    def __init__(self, price, buyer_email):
+        self.price = price
+        self.buyer_email = buyer_email
+
+
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    stars = db.Column(db.Integer, unique=False)
+    text = db.Column(db.String(200), unique=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+    reviewer_user_name = db.Column(db.String, db.ForeignKey('user.user_name'))
+
+    # get a nice printout for Review objects
+    def __repr__(self):
+        return "Review: {} stars: {}".format(self.text, self.stars)
+
+    def __init__(self, stars, text):
+        self.stars = stars
+        self.text = text
 
 
 def register_user(user_name, user_email, user_password):
@@ -60,7 +99,7 @@ def register_user(user_name, user_email, user_password):
     if str(user_password) is None:
         print("ERROR: you must enter a password.")
         return False
-    email_taken = User.query.filter_by(user_email=user_email).all()
+    email_taken = User.query.filter_by(email=user_email).all()
     if len(email_taken) != 0:
         print("ERROR: This email is already registered by an existing user." +
               " Please choose another.")
@@ -72,7 +111,7 @@ def register_user(user_name, user_email, user_password):
     if len(str(user_password)) < 6:
         print("ERROR: Password must be longer than 6 characters.")
         return False
-    if not any(c in special_characters for c in user_password):
+    if password_regex.search(user_password) is None:
         print("ERROR: Password must contain atleast one special character.")
         return False
     upper_count = 0
@@ -106,8 +145,7 @@ def register_user(user_name, user_email, user_password):
         print("ERROR: Username must be greater than 2 characters and less than"
               + "20.")
         return False
-    user = User(user_name=user_name, user_email=user_email,
-                user_password=user_password, balance=100)
+    user = User(email=user_email, user_name=user_name, password=user_password)
     db.session.add(user)
     db.session.commit()
     return True
@@ -123,7 +161,7 @@ def login(email, password):
     if len(password) < 6:
         print("ERROR: Incorrect password length.")
         return None
-    if not any(c in special_characters for c in password):
+    if password_regex.search(password) is None:
         print("ERROR: No Special Characters.")
         return None
     upper_count = 0
@@ -144,8 +182,8 @@ def login(email, password):
     if not match:
         print("Incorrect email format.")
         return None
-    retrieved_user = User.query.filter_by(user_email=email,
-                                          user_password=password).all()
+    retrieved_user = User.query.filter_by(email=email,
+                                          password=password).all()
     if len(retrieved_user) != 1:
         return None
     return retrieved_user[0]
@@ -158,7 +196,7 @@ def update_user(search_email, new_username=None, shipping_address=None,
 
     # Since account must already be valid/real to be logged in no need to
     # revalidate on user end
-    user_to_be_updated = User.query.filter_by(user_email=search_email)
+    user_to_be_updated = User.query.filter_by(email=search_email)
     if user_to_be_updated is None:
         print("SYSTEM ERROR: Account cannot updated - account not linked")
         return None
@@ -184,55 +222,14 @@ def update_user(search_email, new_username=None, shipping_address=None,
         if char.isalnum() is False and char != " ":
             print("ERROR: Shipping Address must be all alphanumeric")
             return None
-        for i in special_characters:
-            if char == i:
-                print("ERROR: No Special Characters")
+        if password_regex.search(char) is None:
+            print("ERROR: No Special Characters")
     user_to_be_updated.shipping_address = shipping_address
     match = re.fullmatch(postal_regex, postal_code)
     if not match:
         print("ERROR: Please enter a valid postal code")
     user_to_be_updated.postal_code = postal_code
     return user_to_be_updated
-
-
-class Product(db.Model):
-    """
-    Class to represent a product being added to "ebay" page by seller
-
-    Attributes:
-        - Product_ID = to uniquely identify a product and for easy extraction
-          from database structure
-        - owner_email =  identifies what user created the product to be sold
-        - Price = the amount of money the seller wishes to sell the product for
-        - product_description = the qualitative and quantitative features of
-          the product described by seller
-
-    Methods:
-        1. _innit__
-        2. check_title_requriements
-        3. check_description_requirements
-        4. check_modified_date
-        5. Update_Product
-
-    """
-    __tablename__ = 'Product'
-    product_title = db.Column(db.String(80), primary_key=True)
-    product_description = db.Column(db.String(2000), primary_key=True)
-    product_ID = db.Column(db.Integer, primary_key=True)
-    owner_email = db.Column(db.String(80), db.ForeignKey('User.user_email'),
-                            nullable=False)
-    product_price = db.Column(db.Integer, primary_key=True)
-    last_date_modified = db.Column(db.String(80), primary_key=True)
-
-    def __repr__(self):
-        return """<Product(product_title= {}, product_description= {},
-                product_ID= {}, owner_email= {}, price= {},
-                last_date_modified={})>""".format(self.product_title,
-                                                  self.product_description,
-                                                  self.product_ID,
-                                                  self.owner_email,
-                                                  self.product_price,
-                                                  self.last_date_modified)
 
 
 def create_product(title, description, owner_email, price):
@@ -250,7 +247,7 @@ def create_product(title, description, owner_email, price):
         if " " not in title:
             print("ERROR: Title MUST be Alphanumeric")
             return False
-    product_exists = Product.query.filter_by(product_title=title).all()
+    product_exists = Product.query.filter_by(title=title).all()
     if len(product_exists) > 0:
         print("ERROR: Product Must Be Unique")
         return False
@@ -266,23 +263,16 @@ def create_product(title, description, owner_email, price):
     if int(price) < 10:
         print("ERROR: Price must be 1More than $10 CAD")
         return False
-    user_exists = User.query.filter_by(user_email=owner_email).first()
+    user_exists = User.query.filter_by(email=owner_email).first()
     if user_exists == 0:
         print("ERROR: Must Have A Registered Account With QBAY")
         return False
-    todays_date = date.today()  # using datetime library to access realtime val
-    if todays_date.year > 2025:
-        print("ERROR: Date Not Possible")
-        return False
-    id = number_of_products
-    product = Product(product_title=title, product_description=description,
-                      product_ID=id, owner_email=owner_email,
-                      product_price=price,
-                      last_date_modified=todays_date)
+    product = Product(title=title, price=price,
+                      description=description,
+                      owner_email=owner_email)
     # create the product object
     db.session.add(product)
     db.session.commit()  # add product to db and save
-    number_of_products += 1  # this value used to create unique ID
     return True
 
 
@@ -290,7 +280,7 @@ def update_product(search_title, owner_email, new_price=None, new_title=None,
                    new_description=None):
     global number_of_products
     # searching for product based off unique ID
-    product_to_be_updated = Product.query.filter_by(product_title=search_title,
+    product_to_be_updated = Product.query.filter_by(title=search_title,
                                                     owner_email=owner_email
                                                     ).first()
     description_size = len(str(new_description))
@@ -301,7 +291,7 @@ def update_product(search_title, owner_email, new_price=None, new_title=None,
         print("No product by that search filter")
         return None
     if new_price is not None:
-        if int(new_price) < int(product_to_be_updated.product_price):
+        if int(new_price) < int(product_to_be_updated.price):
             print("ERROR: Cannot Reduce Price")
             return None
         if int(new_price) > 10000:
@@ -310,7 +300,7 @@ def update_product(search_title, owner_email, new_price=None, new_title=None,
         if int(new_price) < 10:
             print("ERROR: Price must be 1More than $10 CAD")
             return None
-        product_to_be_updated.product_price = new_price
+        product_to_be_updated.price = new_price
     if new_title is not None:
         if new_title.startswith(' '):
             print("ERROR: No Prefixes Allowed in Title")
@@ -322,11 +312,11 @@ def update_product(search_title, owner_email, new_price=None, new_title=None,
             if " " not in new_title:
                 print("ERROR: Title MUST be Alphanumeric")
                 return None
-        product_exists = Product.query.filter_by(product_title=new_title).all()
+        product_exists = Product.query.filter_by(title=new_title).all()
         if len(product_exists) > 0:
             print("ERROR: Product Must Be Unique")
             return None
-        product_to_be_updated.product_title = new_title
+        product_to_be_updated.title = new_title
     if new_description is not None:
         if description_size < title_size:
             print("ERROR: Description Must Be Larger Than Title")
@@ -339,34 +329,9 @@ def update_product(search_title, owner_email, new_price=None, new_title=None,
     return product_to_be_updated
 
 
-class Review(db.Model):
-    """
-    Class to represent a product review
-
-    Attributes:
-        - id - to identify the review in the system and to be easily queried
-        - user_email - identifies the owner that created the review
-        - score - a score out of 10, 10 being great, 0 being awful
-        - review - body of text that supports the overall score
-    """
-    __tablename__ = 'Review'
-    review_ID = db.Column(db.Integer, primary_key=True)
-    reviewer_email = db.Column(db.String(80), db.ForeignKey('User.user_email'),
-                               nullable=False)
-    score = db.Column(db.Integer, nullable=False)
-    review = db.Column(db.String(150), nullable=True)
-
-    def __repr__(self):
-        return """<Review(review_ID= {}, reviewer_email={}, score= {},
-                  review= {}>""".format(self.review_ID,
-                                        self.reviewer_email,
-                                        self.score,
-                                        self.review)
-
-
 def create_review(email, score, review):
     global number_of_reviews
-    review_creator = User.query.filter_by(user_email=email)
+    review_creator = User.query.filter_by(email=email)
     if review_creator is None:
         print("ERROR: account not registered please make an account")
         return False
@@ -379,67 +344,28 @@ def create_review(email, score, review):
     if len(review) > 150:
         print("ERROR: Review must be at most 150 characters")
         return False
-    review = Review(review_ID=number_of_reviews, reviewer_email=email,
-                    score=score, review=review)
+    review = Review(stars=score, text=review)
     # create the product object
     db.session.add(review)
     db.session.commit()  # add product to db and save
-    number_of_reviews += 1  # this value used to create unique ID
     return True
 
 
-class Transaction(db.Model):
-    """
-        Class to represent each transaction
-
-        Attributes:
-        - id - incremental
-        - user_email
-        - product_id
-        - price
-        - date
-    """
-    transaction_id = db.Column(db.Integer, primary_key=True, nullable=False)
-    user_email = db.Column(db.String(80), db.ForeignKey('User.user_email'),
-                           nullable=False)
-    product_id = db.Column(db.Integer, db.ForeignKey('Product.product_ID'),
-                           nullable=False)
-    price = db.Column(db.Integer, db.ForeignKey('Product.product_price'),
-                      nullable=False)
-    date = db.Column(db.String(80), primary_key=True)
-
-    def __repr__(self):
-        return """<Transaction(transaction_ID= {}, user_email= {},
-                  product_id= {}, review= {}>""".format(self.transaction_id,
-                                                        self.user_email,
-                                                        self.product_id,
-                                                        self.date)
-
-
-def create_transaction(email, product_id, price):
+def create_transaction(email, price):
     global number_of_transactions
-    buyer_email = User.query.filter_by(user_email=email)
+    buyer_email = User.query.filter_by(email=email)
     if buyer_email is None:
         print("ERROR: Account Not registered please create an account")
         return False
-    product_id_search = Product.query.filter_by(product_ID=product_id)
-    if product_id_search is None:
-        print("ERROR: Account Not registered please create an account")
-        return False
-    price_search = Product.query.filter_by(product_price=price)
+    price_search = Product.query.filter_by(price=price)
     if price_search is None:
         print("ERROR: Account Not registered please create an account")
         return False
-    todays_date = date.today()
-    id = number_of_transactions
-    transaction = Transaction(transaction_id=id, user_email=email,
-                              product_id=product_id, price=price,
-                              date=todays_date)
+    transaction = Transaction(buyer_email=email, price=price)
     # create the product object
     db.session.add(transaction)
     db.session.commit()  # add product to db and save
-    number_of_transactions += 1  # this value used to create unique ID
     return True
 
 
-db.create_all()  # creating database and columns from qbay
+db.create_all() 
