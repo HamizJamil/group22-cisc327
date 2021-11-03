@@ -4,9 +4,8 @@ from datetime import date
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.attributes import flag_modified
 from qbay import app
-
 import re  # regular expression library
-# email RFC 5322 constraint
+# Different regex's to quickly search inputs and compare with constraints
 email_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 password_regex = re.compile(r"^(?=.{6,})(?=.*[a-z])(?=.*[A-Z])" +
                             r"(?=.*[!@#$%^&+=]).*$")
@@ -16,6 +15,23 @@ db = SQLAlchemy(app)
 
 
 class User(db.Model):
+    """
+    Class to represent a user who has registered for the "ebay" site
+
+    Attributes:
+        - email = An email address associated to the users' account,
+          used to log in and identify the user
+        - username = A user chosen name which is associated with the
+          users account, maximum 20 characters long
+        - password = A password associated to the users account, used
+          in conjunction with email to log in
+        - shipping_address = Shipping address for the user, can be left
+          empty upon registration
+        - postal_code = Postal code associated with users' address, can
+          be left empty upon registration
+        - balance = An integer amount representing the amount of currency
+          in the users account to be spent or withdrawn
+    """
     email = db.Column(db.String(50), primary_key=True, unique=True)
     user_name = db.Column(db.String(20), index=True, unique=False)
     password = db.Column(db.String(100), unique=False, nullable=False)
@@ -42,6 +58,25 @@ class User(db.Model):
 
 
 class Product(db.Model):
+    """
+    Class to represent a product being added to "ebay" page by seller
+
+    Attributes:
+        - Product_ID = to uniquely identify a product and for easy extraction
+          from database structure
+        - owner_email =  identifies what user created the product to be sold
+        - Price = the amount of money the seller wishes to sell the product for
+        - product_description = the qualitative and quantitative features of
+          the product described by seller
+
+    Methods:
+        1. _innit__
+        2. check_title_requriements
+        3. check_description_requirements
+        4. check_modified_date
+        5. Update_Product
+
+    """
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), index=True, unique=True, nullable=False)
     description = db.Column(db.String(2000), index=True, unique=False)
@@ -63,6 +98,16 @@ class Product(db.Model):
 
 
 class Transaction(db.Model):
+    """
+    Class to represent each transaction
+
+    Attributes:
+    - id - incremental
+    - user_email
+    - product_id
+    - price
+    - date
+    """
     id = db.Column(db.Integer, primary_key=True)
     price = db.Column(db.Float, index=True, unique=False)
     buyer = db.Column(db.String, db.ForeignKey('user.email'))
@@ -77,6 +122,15 @@ class Transaction(db.Model):
 
 
 class Review(db.Model):
+    """
+    Class to represent a product review
+
+    Attributes:
+        - id - to identify the review in the system and to be easily queried
+        - user_email - identifies the owner that created the review
+        - score - a score out of 10, 10 being great, 0 being awful
+        - review - body of text that supports the overall score
+    """
     id = db.Column(db.Integer, primary_key=True)
     stars = db.Column(db.Integer, unique=False)
     text = db.Column(db.String(200), unique=False)
