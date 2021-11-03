@@ -3,7 +3,7 @@ from qbay_test.conftest import base_url
 from unittest.mock import patch
 from qbay.models import Product
 from selenium import webdriver
-
+# Globals
 two_thousand_char_description = ("111111111111111111111111111111111111111111" +
                                  "111111111111111111111111111111111111111111" +
                                  "111111111111111111111111111111111111111111" +
