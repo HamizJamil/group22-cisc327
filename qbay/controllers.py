@@ -26,6 +26,7 @@ def login():
 
 @app.route("/createproduct", methods=["POST", "GET"])
 def create_product():
+    
     if request.method == "POST":
         owner_email = request.form["user_email"]
         print(owner_email)
@@ -34,27 +35,33 @@ def create_product():
         description = request.form["description"]
         found_Prod = Product.query.filter_by(title=title).first()
         print(title, len(title))
+        count = 0
         if title.startswith(" ") or title.endswith(" ") or \
                 not title.replace(" ", "").isalnum():
             flash("The title of the product has to be alphanumeric-only, "
                   "and space allowed only if it is not as prefix and suffix")
+            count += 1 
             return render_template("createproduct.html")
-        elif len(title) > 80:
-            flash("The title's too long")
+        elif len(title) >= 81 or len(title) == 0:
+            flash("The title has to be between 1-80 characters")
+            count += 1
             return render_template("createproduct.html")
         elif len(description) < len(title) or len(description) < 20 \
                 or len(description) > 2000:
             flash("Description needs to be longer than the title and between"
-                  "20 adn 2000 characters long")
+                  " 20 and 2000 characters long")
+            count += 1
             return render_template("createproduct.html")
         elif found_Prod:
             flash("This product is already created! Please use update or" +
                   "add a new title")
+            count += 1
             return render_template("createproduct.html")
         elif not curr_user:
             flash("Sorry must have a valid Qbay account to create a product")
+            count += 1
             return render_template("createproduct.html")
-        else:
+        if count == 0:
             price = request.form["price"]
             product = Product(title, int(price), description, owner_email)
             db.session.add(product)

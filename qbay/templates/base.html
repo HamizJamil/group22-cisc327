@@ -47,7 +47,7 @@
     <div class="container">
         {% for message in get_flashed_messages() %}
         <div class="alert alert-warning">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <button type="button" class="close" id="alert" name="alert" data-dismiss="alert">&times;</button>
             {{ message }}
         </div>
         {% endfor %}
