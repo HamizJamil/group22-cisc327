@@ -73,7 +73,6 @@ def registration():
         password = request.form["user_pass"]
         user_name = request.form["user_name"]
         found_user = User.query.filter_by(email=email).first()
-        print(found_user, "!!!!!!!!!!!!!!!!!!!!!!!")
         if found_user is not None:
             flash("This user is already registered! Please log in:")
             return redirect(url_for("login"))
