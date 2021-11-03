@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Create Product{% endblock %}
+
+{% block content %}
+    <form action="#" method="POST">
+    <P></P>
+     <div class="col px-md-5"><div class="p-3 border bg-light">
+
+        <h3></h3>
+         <P>
+            <label for="Owner_Email"><h7><span class=" label label-primary">Owner_Email</span></h7></label>
+            <input type="email" id="user_email"  name = "user_email">
+        </p>
+        <p>
+            <label for="Title"><h7><span class=" label label-primary">Title</label>
+            <input type="text" id="title" name="title"/>
+        </p>
+        <p>
+            <label for="Price"><h7><span class=" label label-primary">Price</label>
+             <input type="number" id= "price" name="price" min = "10" max = "10000" step="0.01"/>
+        </p>
+        <p>
+            <label for="Description"><h7><span class=" label label-primary">Description</label>
+        </p>
+        <P>
+            <textarea id="description" name="description" rows="7" style="height:100%" class="form-group w-100"></textarea>
+        </p>
+
+        <P>
+          <input href="#" type="submit" class="btn btn-secondary" id="Save" value="Save"\>
+          <a href="userhome" class="btn btn-secondary" id="Back" value= "Back" role="button">Back</a>
+        </P>
+     </div></div>
+    </form>
+{% endblock %}
+</html>
