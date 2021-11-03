@@ -33,6 +33,7 @@ def create_product():
         curr_user = User.query.filter_by(email=owner_email).first()
         title = request.form["title"]
         description = request.form["description"]
+        price = int(request.form["price"])
         found_Prod = Product.query.filter_by(title=title).first()
         print(title, len(title))
         count = 0
@@ -61,8 +62,11 @@ def create_product():
             flash("Sorry must have a valid Qbay account to create a product")
             count += 1
             return render_template("createproduct.html")
+        elif price < 10 or price > 10000:
+            flash("Price must be between $10-$10000CAD")
+            count += 1
+            return render_template("createproduct.html")
         if count == 0:
-            price = request.form["price"]
             product = Product(title, int(price), description, owner_email)
             db.session.add(product)
             db.session.commit()
