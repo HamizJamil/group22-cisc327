@@ -1,16 +1,15 @@
 from flask import Flask
-from datetime import datetime
+from datetime import datetime, date
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm.attributes import flag_modified
 from qbay import app
-import re # regular expression library
+import re  # regular expression library
 # email RFC 5322 constraint
 
-email_regex= re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+email_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 password_regex = re.compile(r"^(?=.{6,})(?=.*[a-z])(?=.*[A-Z])"
                             r"(?=.*[!@#$%^&+=]).*$")
-postal_code_regex=re.compile(r"(^[a-zA-Z]+[0-9]+[a-zA-Z]+"
-                             r"[0-9]+[a-zA-Z]+[0-9])")
+postal_code_regex = re.compile(r"(^[a-zA-Z]+[0-9]+[a-zA-Z]+"
+                               r"[0-9]+[a-zA-Z]+[0-9])")
 
 
 app = Flask(__name__)
@@ -28,6 +27,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # this variable, db, will be used for all SQLAlchemy commands
 db = SQLAlchemy(app)
 
+
 # each table in the database needs a class to be created for it
 # db.Model is required - don't change it
 # identify all columns by name and data type
@@ -39,30 +39,33 @@ class User(db.Model):
     postal_code = db.Column(db.String(7), index=True, unique=False)
     balance = db.Column(db.Integer, index=True, unique=False)
     # relationship between User and other Models
-    products=db.relationship('Product', backref='user', lazy='dynamic')
+    products = db.relationship('Product', backref='user', lazy='dynamic')
     reviews = db.relationship('Review', backref='user', lazy='dynamic')
-    transactions = db.relationship('Transaction', backref='user', lazy='dynamic')
+    transactions = db.relationship('Transaction', backref='user',
+                                   lazy='dynamic')
 
-    def __init__(self, email, user_name, password, shipping=None, post=None,balance=100):
+    def __init__(self, email, user_name, password, shipping=None,
+                 post=None, balance=100):
         self.email = email
         self.user_name = user_name
         self.password = password
         self.shipping_address = shipping
         self.postal_code = post
-        self.balance= balance
+        self.balance = balance
 
     def __repr__(self):
-        return "User: {}".format(self.user_name,self.email)
+        return "User: {} {}".format(self.user_name, self.email)
 
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), index=True, unique=True, nullable=False)
-    description=db.Column(db.String(2000), index=True, unique=False)
-    price=db.Column(db.Float, index=True, unique=False)
-    last_modified_date=db.Column(db.DateTime, index=True, unique=False)
+    description = db.Column(db.String(2000), index=True, unique=False)
+    price = db.Column(db.Float, index=True, unique=False)
+    last_modified_date = db.Column(db.DateTime, index=True, unique=False)
     owner_email = db.Column(db.String, db.ForeignKey('user.email'))
-    transactions = db.relationship('Transaction', backref='product', lazy='dynamic')
+    transactions = db.relationship('Transaction', backref='product',
+                                   lazy='dynamic')
     reviews = db.relationship('Review', backref='product', lazy='dynamic')
 
     def __init__(self, title, price, description, owner_email):
@@ -72,13 +75,13 @@ class Product(db.Model):
         self.owner_email = owner_email
         self.last_modified_date = datetime.now()
 
-
     def __repr__(self):
-        return "Product {}: {} Price: {}".format(self.id, self.title, self.price)
+        return "Product {}: {} Price: {}".format(self.id, self.title,
+                                                 self.price)
 
 
 class Transaction(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.Integer, primary_key=True)
     price = db.Column(db.Float, index=True, unique=False)
     date = db.Column(db.DateTime, index=True, unique=False)
     buyer = db.Column(db.String, db.ForeignKey('user.email'))
@@ -87,6 +90,7 @@ class Transaction(db.Model):
     def __repr__(self):
         return "Transaction {}: {}, date: {}".format(self.id, self.product,
                                                      self.date)
+
     def __init__(self, price, buyer, product_id):
         self.price = price
         self.buyer = buyer
@@ -101,15 +105,16 @@ class Review(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
     reviewer_user_name = db.Column(db.String, db.ForeignKey('user.user_name'))
 
-    #get a nice printout for Review objects
+    # get a nice printout for Review objects
     def __repr__(self):
         return "Review: {} stars: {}".format(self.text, self.stars)
 
-    def __init__(self, stars, review_text, product_id,reviewer):
+    def __init__(self, stars, review_text, product_id, reviewer):
         self.stars = stars
         self.text = review_text
         self.product_id = product_id
-        self.reviewer_user_name=reviewer
+        self.reviewer_user_name = reviewer
+
 
 def register_user(user_name, user_email, user_password):
     if str(user_email) is None:
@@ -244,7 +249,7 @@ def update_user(search_email, new_username=None, shipping_address=None,
         if password_regex.search(char) is None:
             print("ERROR: No Special Characters")
     user_to_be_updated.shipping_address = shipping_address
-    match = re.fullmatch(postal_regex, postal_code)
+    match = re.fullmatch(postal_code_regex, postal_code)
     if not match:
         print("ERROR: Please enter a valid postal code")
     user_to_be_updated.postal_code = postal_code
@@ -385,5 +390,3 @@ def create_transaction(email, price):
     db.session.add(transaction)
     db.session.commit()  # add product to db and save
     return True
-
-
