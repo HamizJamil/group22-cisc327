@@ -69,10 +69,9 @@ def registration():
             flash("Passwords mismatch. Please Enter again!")
             return redirect(url_for("registration"))
         found_user = User.query.filter_by(email=email).first()
-        print(found_user)
         if found_user:
             flash("This user is already registered! Please log in:")
-            redirect(url_for("login"))
+            return redirect(url_for("login"))
         # if email provided is not RFC 5322
         if email_regex.search(email) is None:
             flash("Please provide a valid email address")
@@ -128,14 +127,10 @@ def home():
 @app.route("/updateprofile", methods=["POST", "GET"])
 def update_profile():
     if request.method == "POST":
-        print("user profile")
         if postal_code_regex.search(request.form["postal_code"]) is None:
             flash("postal code should be X9X9X9")
             return render_template("updateprofile.html")
         user_found = User.query.filter_by(email=session["user"]).first()
-        print(user_found)
-        print(request.form["shipping_address"])
-        print(request.form["postal_code"])
         user_found.postal_code = request.form["postal_code"]
         user_found.shipping_address = request.form["shipping_address"]
         db.session.commit()
@@ -149,7 +144,6 @@ def update_product():
     if request.method == "POST":
         title = request.form["title"]
         prod_found = Product.query.filter_by(title=title).first()
-        print(prod_found)
         if prod_found is None:
             flash("record Not found")
             return render_template("updateproduct.html")
@@ -164,7 +158,7 @@ def update_product():
                     prod_found.description = request.form["Description"]
             if request.form["price"]:
                 prod_found.price = request.form["price"]
-            prod_found.last_modified_date = datetime.now()
+            prod_found.last_modified_date = date.today()
             db.session.commit()
             return render_template("updateproduct.html")
     else:

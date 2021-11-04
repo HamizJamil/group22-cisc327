@@ -1,5 +1,5 @@
 from flask import Flask
-from datetime import datetime, date
+from datetime import date
 from flask_sqlalchemy import SQLAlchemy
 from qbay import app
 import re  # regular expression library
@@ -62,7 +62,7 @@ class Product(db.Model):
     title = db.Column(db.String(80), index=True, unique=True, nullable=False)
     description = db.Column(db.String(2000), index=True, unique=False)
     price = db.Column(db.Float, index=True, unique=False)
-    last_modified_date = db.Column(db.DateTime, index=True, unique=False)
+    last_modified_date = db.Column(db.Date, index=True, unique=False)
     owner_email = db.Column(db.String, db.ForeignKey('user.email'))
     transactions = db.relationship('Transaction', backref='product',
                                    lazy='dynamic')
@@ -73,7 +73,7 @@ class Product(db.Model):
         self.price = price
         self.description = description
         self.owner_email = owner_email
-        self.last_modified_date = datetime.now()
+        self.last_modified_date = date.today()
 
     def __repr__(self):
         return "Product {}: {} Price: {}".format(self.id, self.title,
@@ -95,7 +95,7 @@ class Transaction(db.Model):
         self.price = price
         self.buyer = buyer
         self.product_id = product_id
-        self.date = datetime.now()
+        self.date = date.today()
 
 
 class Review(db.Model):
