@@ -4,10 +4,7 @@
 {% block content %}
 
     <form action="/" method="POST">
-    <h2>Congratulations! You are using one of the best online shopping websites</h2>
-           <h4>
-            <P> We provide you a opportunity to present your products and do your business</P>
-            <P>Please add a new product or update the information of current products.</P> </h4>
+    <h2>User: {{session["user"]}} </h2>
             <P></P>
         <P>
             <label for="NewProd"><h5><span class="btn btn-Light">New Product:</span></h5></label>

@@ -1,150 +1,115 @@
-from flask import Flask, redirect, url_for, render_template
-from flask import request, session, flash
-from datetime import date
+from flask import Flask
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.attributes import flag_modified
 from qbay import app
-import re  # regular expression library
-# Different regex's to quickly search inputs and compare with constraints
-email_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
-password_regex = re.compile(r"^(?=.{6,})(?=.*[a-z])(?=.*[A-Z])" +
-                            r"(?=.*[!@#$%^&+=]).*$")
-postal_regex = re.compile(r"[A-Za-z][0-9][A-Za-z] [0-9][A-Za-z][0-9]")
+import re # regular expression library
+# email RFC 5322 constraint
 
+email_regex= re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+password_regex = re.compile(r"^(?=.{6,})(?=.*[a-z])(?=.*[A-Z])"
+                            r"(?=.*[!@#$%^&+=]).*$")
+postal_code_regex=re.compile(r"(^[a-zA-Z]+[0-9]+[a-zA-Z]+"
+                             r"[0-9]+[a-zA-Z]+[0-9])")
+
+
+app = Flask(__name__)
+
+# Flask-WTF requires an enryption key - the string can be anything
+app.config['SECRET_KEY'] = 'MC2XH243GssUWwKdTWS7FDhdwYF56wPj8'
+
+# the name of the database; add path if necessary
+db_name = 'Qbay.sqlite3'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_name
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# this variable, db, will be used for all SQLAlchemy commands
 db = SQLAlchemy(app)
 
-
+# each table in the database needs a class to be created for it
+# db.Model is required - don't change it
+# identify all columns by name and data type
 class User(db.Model):
-    """
-    Class to represent a user who has registered for the "ebay" site
-
-    Attributes:
-        - email = An email address associated to the users' account,
-          used to log in and identify the user
-        - username = A user chosen name which is associated with the
-          users account, maximum 20 characters long
-        - password = A password associated to the users account, used
-          in conjunction with email to log in
-        - shipping_address = Shipping address for the user, can be left
-          empty upon registration
-        - postal_code = Postal code associated with users' address, can
-          be left empty upon registration
-        - balance = An integer amount representing the amount of currency
-          in the users account to be spent or withdrawn
-    """
-    email = db.Column(db.String(50), primary_key=True, unique=True)
+    email = db.Column(db.String(50), primary_key=True)
     user_name = db.Column(db.String(20), index=True, unique=False)
     password = db.Column(db.String(100), unique=False, nullable=False)
     shipping_address = db.Column(db.String(100), index=True, unique=False)
     postal_code = db.Column(db.String(7), index=True, unique=False)
     balance = db.Column(db.Integer, index=True, unique=False)
     # relationship between User and other Models
-    products = db.relationship('Product', backref='user', lazy='dynamic')
+    products=db.relationship('Product', backref='user', lazy='dynamic')
     reviews = db.relationship('Review', backref='user', lazy='dynamic')
-    transactions = db.relationship('Transaction', backref='user', 
-                                   lazy='dynamic')
+    transactions = db.relationship('Transaction', backref='user', lazy='dynamic')
 
-    def __init__(self, email, user_name, password, shipping=None, 
-                 post=None, balance=100):
+    def __init__(self, email, user_name, password, shipping=None, post=None,balance=100):
         self.email = email
         self.user_name = user_name
         self.password = password
         self.shipping_address = shipping
         self.postal_code = post
-        self.balance = balance
+        self.balance= balance
 
     def __repr__(self):
-        return "User: {}".format(self.user_name, self.email)
+        return "User: {}".format(self.user_name,self.email)
 
 
 class Product(db.Model):
-    """
-    Class to represent a product being added to "ebay" page by seller
-
-    Attributes:
-        - Product_ID = to uniquely identify a product and for easy extraction
-          from database structure
-        - owner_email =  identifies what user created the product to be sold
-        - Price = the amount of money the seller wishes to sell the product for
-        - product_description = the qualitative and quantitative features of
-          the product described by seller
-
-    Methods:
-        1. _innit__
-        2. check_title_requriements
-        3. check_description_requirements
-        4. check_modified_date
-        5. Update_Product
-
-    """
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), index=True, unique=True, nullable=False)
-    description = db.Column(db.String(2000), index=True, unique=False)
-    price = db.Column(db.Float, index=True, unique=False)
+    description=db.Column(db.String(2000), index=True, unique=False)
+    price=db.Column(db.Float, index=True, unique=False)
+    last_modified_date=db.Column(db.DateTime, index=True, unique=False)
     owner_email = db.Column(db.String, db.ForeignKey('user.email'))
-    last_date_modified = db.Column(db.String(20), index=True, unique=False)
+    transactions = db.relationship('Transaction', backref='product', lazy='dynamic')
+    reviews = db.relationship('Review', backref='product', lazy='dynamic')
 
-    def __init__(self, title, price, description, owner_email,
-                 today=str(date.today())):
+    def __init__(self, title, price, description, owner_email):
         self.title = title
         self.price = price
         self.description = description
         self.owner_email = owner_email
-        self.last_date_modified = today
+        self.last_modified_date = datetime.now()
+
 
     def __repr__(self):
-        return "Product {}: {} Price: {}".format(self.id, self.title, 
-                                                 self.price)
+        return "Product {}: {} Price: {}".format(self.id, self.title, self.price)
 
 
 class Transaction(db.Model):
-    """
-    Class to represent each transaction
-
-    Attributes:
-    - id - incremental
-    - user_email
-    - product_id
-    - price
-    - date
-    """
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key = True)
     price = db.Column(db.Float, index=True, unique=False)
+    date = db.Column(db.DateTime, index=True, unique=False)
     buyer = db.Column(db.String, db.ForeignKey('user.email'))
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
 
     def __repr__(self):
         return "Transaction {}: {}, date: {}".format(self.id, self.product,
                                                      self.date)
-    
-    def __init__(self, price, buyer_email):
+    def __init__(self, price, buyer, product_id):
         self.price = price
-        self.buyer_email = buyer_email
+        self.buyer = buyer
+        self.product_id = product_id
+        self.date = datetime.now()
 
 
 class Review(db.Model):
-    """
-    Class to represent a product review
-
-    Attributes:
-        - id - to identify the review in the system and to be easily queried
-        - user_email - identifies the owner that created the review
-        - score - a score out of 10, 10 being great, 0 being awful
-        - review - body of text that supports the overall score
-    """
     id = db.Column(db.Integer, primary_key=True)
     stars = db.Column(db.Integer, unique=False)
     text = db.Column(db.String(200), unique=False)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
     reviewer_user_name = db.Column(db.String, db.ForeignKey('user.user_name'))
 
-    # get a nice printout for Review objects
+    #get a nice printout for Review objects
     def __repr__(self):
         return "Review: {} stars: {}".format(self.text, self.stars)
 
-    def __init__(self, stars, text):
+    def __init__(self, stars, review_text, product_id,reviewer):
         self.stars = stars
-        self.text = text
-
+        self.text = review_text
+        self.product_id = product_id
+        self.reviewer_user_name=reviewer
 
 def register_user(user_name, user_email, user_password):
     if str(user_email) is None:
@@ -407,7 +372,7 @@ def create_review(email, score, review):
 
 def create_transaction(email, price):
     global number_of_transactions
-    buyer_email = User.query.filter_by(email=email)
+    buyer_email = User.query.filter_by(email=email).first()
     if buyer_email is None:
         print("ERROR: Account Not registered please create an account")
         return False
@@ -422,4 +387,3 @@ def create_transaction(email, price):
     return True
 
 
-db.create_all() 
