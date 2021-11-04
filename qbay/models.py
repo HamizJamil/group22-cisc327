@@ -397,8 +397,8 @@ def create_product(title, description, owner_email, price, erro_handler=None):
         return False
     # if count == 0:
     product = Product(title=title, price=price,
-                     description=description,
-                     owner_email=owner_email)
+                      description=description,
+                      owner_email=owner_email)
     # create the product object
     db.session.add(product)
     db.session.commit()  # add product to db and save
