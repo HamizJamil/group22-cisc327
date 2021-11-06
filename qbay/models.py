@@ -146,58 +146,80 @@ class Review(db.Model):
         self.text = text
 
 
-def register_user(user_name, user_email, user_password):
+# function to send errors to frontend 
+
+def error_handler(message):
+    flash(message)
+
+
+def register_user(user_name, user_email, user_password, erro_handler=None):
     if str(user_email) is None:
-        print("ERROR: you must enter a username.")
+        if erro_handler is not None:
+            error_handler("ERROR: you must enter a username.")
         return False
     if str(user_password) is None:
-        print("ERROR: you must enter a password.")
+        if erro_handler is not None:
+            error_handler("ERROR: you must enter a password.")
         return False
-    email_taken = User.query.filter_by(email=user_email).all()
-    if len(email_taken) != 0:
-        print("ERROR: This email is already registered by an existing user." +
-              " Please choose another.")
+    email_taken = User.query.filter_by(email=user_email).first()
+    if email_taken is not None:
+        if erro_handler is not None:
+            error_handler("ERROR: This email is already registered by" +
+                          "an existing user. Please choose another.")
         return False
     match = re.fullmatch(email_regex, user_email)
     if not match:
-        print("ERROR: Please enter a valid email address.")
+        if erro_handler is not None:
+            error_handler("ERROR: Please enter a valid email address.")
         return False
     if len(str(user_password)) < 6:
-        print("ERROR: Password must be longer than 6 characters.")
+        if erro_handler is not None:
+            error_handler("ERROR: Password must be longer than 6 characters.")
         return False
     if password_regex.search(user_password) is None:
-        print("ERROR: Password must contain atleast one special character.")
+        if erro_handler is not None:
+            error_handler("ERROR: Password must contain at least one" +
+                          "special character.")
         return False
     upper_count = 0
     for i in range(len(user_password)):
         if user_password[i].isupper():
             upper_count += 1
     if upper_count == 0:
-        print("ERROR: Password does not contain captial characters.")
+        if erro_handler is not None:
+            error_handler("ERROR: Password does not contain" + 
+                          " captial characters.")
         return False
     lower_count = 0
     for i in range(len(user_password)):
         if user_password[i].islower():
             lower_count += 1
-        if lower_count == 0:
-            print("ERROR: Password does not contain lower case characters.")
-            return False
+    if lower_count == 0:
+        if erro_handler is not None:
+            error_handler("ERROR: Password does not contain lower" +
+                          "case characters.")
+        return False
     if user_name is None:
-        print("ERROR: null username field.")
+        if erro_handler is not None:
+            error_handler("ERROR: null username field.")
         return False
     if not user_name.isalnum():
-        if " " not in user_name:
-            print("ERROR: username MUST be Alphanumeric")
+        if " " in user_name:
+            if erro_handler is not None:
+                error_handler("ERROR: username MUST be Alphanumeric")
             return False
     if user_name.startswith(' '):
-        print("ERROR: No Prefixes Allowed in Username")
+        if erro_handler is not None:
+            error_handler("ERROR: No Prefixes Allowed in Username")
         return False
     if user_name.endswith(' '):
-        print("ERROR: No Suffixes Allowed in Username")
+        if erro_handler is not None:
+            error_handler("ERROR: No Suffixes Allowed in Username")
         return False
     if len(user_name) < 3 or len(user_name) > 19:
-        print("ERROR: Username must be greater than 2 characters and less than"
-              + "20.")
+        if erro_handler is not None:
+            error_handler("ERROR: Username must be greater than 2"
+                          + " characters and less than 20.")
         return False
     user = User(email=user_email, user_name=user_name, password=user_password)
     db.session.add(user)
@@ -205,36 +227,45 @@ def register_user(user_name, user_email, user_password):
     return True
 
 
-def login(email, password):
+def login(email, password, erro_handler=None):
     if email is None:
-        print("ERROR: you must enter a username.")
+        if erro_handler is not None:
+            error_handler("ERROR: you must enter an email.")
         return None
     if password is None:
-        print("ERROR: you must enter a password.")
+        if erro_handler is not None:
+            error_handler("ERROR: you must enter a password.")
         return None
     if len(password) < 6:
-        print("ERROR: Incorrect password length.")
+        if erro_handler is not None:
+            error_handler("ERROR: Incorrect password length.")
         return None
     if password_regex.search(password) is None:
-        print("ERROR: No Special Characters.")
+        if erro_handler is not None:
+            error_handler("ERROR: No Special Characters.")
         return None
     upper_count = 0
     for i in range(len(password)):
         if password[i].isupper():
             upper_count += 1
     if upper_count == 0:
-        print("ERROR: Password does not contain captial characters.")
+        if erro_handler is not None:
+            error_handler("ERROR: Password does not" + 
+                          " contain captial characters.")
         return None
     lower_count = 0
     for i in range(len(password)):
         if password[i].islower():
             lower_count += 1
-        if lower_count == 0:
-            print("ERROR: Password does not contain lower case characters.")
-            return None
+    if lower_count == 0:
+        if erro_handler is not None:
+            error_handler("ERROR: Password does not contain" +
+                          " lower case characters.")
+        return None
     match = re.fullmatch(email_regex, email)
     if not match:
-        print("Incorrect email format.")
+        if erro_handler is not None:
+            error_handler("Incorrect email format.")
         return None
     retrieved_user = User.query.filter_by(email=email,
                                           password=password).all()
@@ -244,7 +275,7 @@ def login(email, password):
 
 
 def update_user(search_email, new_username=None, shipping_address=None,
-                postal_code=None):
+                postal_code=None, erro_handler=None):
     # account is already logged in so system will grab email from current
     # account logged in
 
@@ -252,75 +283,119 @@ def update_user(search_email, new_username=None, shipping_address=None,
     # revalidate on user end
     user_to_be_updated = User.query.filter_by(email=search_email)
     if user_to_be_updated is None:
-        print("SYSTEM ERROR: Account cannot updated - account not linked")
+        if erro_handler is not None:
+            error_handler("SYSTEM ERROR: Account cannot updated" +
+                          " - account not linked")
         return None
     if new_username is not None:
         if new_username == "":  # empty username field
-            print("ERROR: New Username cannot be empty")
+            if erro_handler is not None:
+                error_handler("ERROR: New Username cannot be empty")
             return None
         for char in new_username:
             if char.isalnum() is False and char != " ":
-                print("ERROR: Username must be all alphanumeric")
+                if erro_handler is not None:
+                    error_handler("ERROR: Username must be all alphanumeric")
                 return None
         if new_username[0] == " ":
-            print("ERROR: No space as the prefix in new username")
+            if erro_handler is not None:
+                error_handler("ERROR: No space as the prefix in new username")
             return None
         if new_username[len(new_username) - 1] == " ":
-            print("ERROR: No spaces as suffix in new user name")
+            if erro_handler is not None:
+                error_handler("ERROR: No spaces as suffix in new user name")
             return None
     user_to_be_updated.user_name = new_username
     if shipping_address is None:
-        print("ERROR: Shipping Address cannot be empty")
+        if erro_handler is not None:
+            error_handler("ERROR: Shipping Address cannot be empty")
         return None
     for char in shipping_address:
         if char.isalnum() is False and char != " ":
-            print("ERROR: Shipping Address must be all alphanumeric")
+            if erro_handler is not None:
+                error_handler("ERROR: Shipping Address must be" + 
+                              " all alphanumeric")
             return None
-        if password_regex.search(char) is None:
-            print("ERROR: No Special Characters")
+        if password_regex.search(char) is not None:
+            if erro_handler is not None:
+                error_handler("ERROR: No Special Characters")
     user_to_be_updated.shipping_address = shipping_address
     match = re.fullmatch(postal_regex, postal_code)
     if not match:
-        print("ERROR: Please enter a valid postal code")
+        if erro_handler is not None:
+            error_handler("ERROR: Please enter a valid postal code")
     user_to_be_updated.postal_code = postal_code
     return user_to_be_updated
 
 
-def create_product(title, description, owner_email, price):
+def create_product(title, description, owner_email, price, erro_handler=None):
     # method will create product as long as it follows the site instructions
     global number_of_products
     description_size = len(str(description))
     title_size = len(str(title))
+    count = 0
+    current_user = User.query.filter_by(email=owner_email).first()
+    if current_user is None:
+        if erro_handler is not None:
+            error_handler("ERROR: No user found")
+        count += 1
+        return False
     if title.startswith(' '):
-        print("ERROR: No Prefixes Allowed in Title")
+        if erro_handler is not None:
+            error_handler("ERROR: No Prefixes Allowed in Title")
+        count += 1
         return False
     if title.endswith(' '):
-        print("ERROR: No Suffixes Allowed in Title")
+        if erro_handler is not None:
+            error_handler("ERROR: No Suffixes Allowed in Title")
+        count += 1
         return False
     if not title.isalnum():
         if " " not in title:
-            print("ERROR: Title MUST be Alphanumeric")
+            if erro_handler is not None:
+                error_handler("ERROR: Title MUST be Alphanumeric")
+            count += 1
             return False
     product_exists = Product.query.filter_by(title=title).all()
     if len(product_exists) > 0:
-        print("ERROR: Product Must Be Unique")
+        if erro_handler is not None:
+            error_handler("ERROR: Product Must Be Unique")
+        count += 1
         return False
     if int(description_size) < int(title_size):
-        print("ERROR: Description Must Be Larger Than Title")
+        if erro_handler is not None:
+            error_handler("ERROR: Description Must Be Larger Than Title")
+        count += 1
+        return False
+    if int(description_size) > 2000:
+        if erro_handler is not None:
+            error_handler("ERROR: Description Must Be Smaller" +
+                          " Than 2000 Characters")
+        count += 1
         return False
     if int(description_size) < 20:
-        print("ERROR: Description Must Be Larger Than 20 Characters")
+        if erro_handler is not None:
+            error_handler("ERROR: Description Must Be Larger" + 
+                          " Than 20 Characters")
+        count += 1
         return False
     if int(price) > 10000:
-        print("ERROR: Price must be Less than $10000 CAD")
+        if erro_handler is not None:
+            error_handler("ERROR: Price must be Less than $10000 CAD")
+        count += 1
         return False
     if int(price) < 10:
-        print("ERROR: Price must be 1More than $10 CAD")
+        if erro_handler is not None:
+            error_handler("ERROR: Price must be More than $10 CAD")
+        count += 1
         return False
     user_exists = User.query.filter_by(email=owner_email).first()
     if user_exists == 0:
-        print("ERROR: Must Have A Registered Account With QBAY")
+        if erro_handler is not None:
+            error_handler("ERROR: Must Have A Registered Account With QBAY")
+        count += 1
         return False
+    # if count == 0:
     product = Product(title=title, price=price,
                       description=description,
                       owner_email=owner_email)
@@ -331,7 +406,7 @@ def create_product(title, description, owner_email, price):
 
 
 def update_product(search_title, owner_email, new_price=None, new_title=None,
-                   new_description=None):
+                   new_description=None, erro_handler=None):
     global number_of_products
     # searching for product based off unique ID
     product_to_be_updated = Product.query.filter_by(title=search_title,
@@ -342,41 +417,52 @@ def update_product(search_title, owner_email, new_price=None, new_title=None,
     # parameters are deafaulted to NONE so if no change is made the product
     # is unaffected -- now evaluate the changes with our site standard
     if product_to_be_updated is None:
-        print("No product by that search filter")
+        if erro_handler is not None:
+            error_handler("No product by that search filter")
         return None
     if new_price is not None:
         if int(new_price) < int(product_to_be_updated.price):
-            print("ERROR: Cannot Reduce Price")
+            if erro_handler is not None:
+                error_handler("ERROR: Cannot Reduce Price")
             return None
         if int(new_price) > 10000:
-            print("ERROR: Price must be Less than $10000 CAD")
+            if erro_handler is not None:
+                error_handler("ERROR: Price must be Less than $10000 CAD")
             return None
         if int(new_price) < 10:
-            print("ERROR: Price must be 1More than $10 CAD")
+            if erro_handler is not None:
+                error_handler("ERROR: Price must be 1More than $10 CAD")
             return None
         product_to_be_updated.price = new_price
     if new_title is not None:
         if new_title.startswith(' '):
-            print("ERROR: No Prefixes Allowed in Title")
+            if erro_handler is not None:
+                error_handler("ERROR: No Prefixes Allowed in Title")
             return None
         if new_title.endswith(' '):
-            print("ERROR: No Suffixes Allowed in Title")
+            if erro_handler is not None:
+                error_handler("ERROR: No Suffixes Allowed in Title")
             return None
         if not new_title.isalnum():
             if " " not in new_title:
-                print("ERROR: Title MUST be Alphanumeric")
+                if erro_handler is not None:
+                    error_handler("ERROR: Title MUST be Alphanumeric")
                 return None
         product_exists = Product.query.filter_by(title=new_title).all()
         if len(product_exists) > 0:
-            print("ERROR: Product Must Be Unique")
+            if erro_handler is not None:
+                error_handler("ERROR: Product Must Be Unique")
             return None
         product_to_be_updated.title = new_title
     if new_description is not None:
         if description_size < title_size:
-            print("ERROR: Description Must Be Larger Than Title")
+            if erro_handler is not None:
+                error_handler("ERROR: Description Must Be Larger Than Title")
             return None
         if description_size < 20:
-            print("ERROR: Description Must Be Larger Than 20 Characters")
+            if erro_handler is not None:
+                error_handler("ERROR: Description Must Be Larger" + 
+                              " Than 20 Characters")
             return None
         product_to_be_updated.product_description = new_description
     product_to_be_updated.last_date_modified = date.today()
