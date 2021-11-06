@@ -152,32 +152,32 @@ def error_handler(message):
     flash(message)
 
 
-def register_user(user_name, user_email, user_password, erro_handler=None):
+def register_user(user_name, user_email, user_password, error_handler=None):
     if str(user_email) is None:
-        if erro_handler is not None:
+        if error_handler is not None:
             error_handler("ERROR: you must enter a username.")
         return False
     if str(user_password) is None:
-        if erro_handler is not None:
+        if error_handler is not None:
             error_handler("ERROR: you must enter a password.")
         return False
     email_taken = User.query.filter_by(email=user_email).first()
     if email_taken is not None:
-        if erro_handler is not None:
+        if error_handler is not None:
             error_handler("ERROR: This email is already registered by" +
                           "an existing user. Please choose another.")
         return False
     match = re.fullmatch(email_regex, user_email)
     if not match:
-        if erro_handler is not None:
+        if error_handler is not None:
             error_handler("ERROR: Please enter a valid email address.")
         return False
     if len(str(user_password)) < 6:
-        if erro_handler is not None:
+        if error_handler is not None:
             error_handler("ERROR: Password must be longer than 6 characters.")
         return False
     if password_regex.search(user_password) is None:
-        if erro_handler is not None:
+        if error_handler is not None:
             error_handler("ERROR: Password must contain at least one" +
                           "special character.")
         return False
@@ -186,7 +186,7 @@ def register_user(user_name, user_email, user_password, erro_handler=None):
         if user_password[i].isupper():
             upper_count += 1
     if upper_count == 0:
-        if erro_handler is not None:
+        if error_handler is not None:
             error_handler("ERROR: Password does not contain" + 
                           " captial characters.")
         return False
@@ -195,29 +195,29 @@ def register_user(user_name, user_email, user_password, erro_handler=None):
         if user_password[i].islower():
             lower_count += 1
     if lower_count == 0:
-        if erro_handler is not None:
+        if error_handler is not None:
             error_handler("ERROR: Password does not contain lower" +
                           "case characters.")
         return False
     if user_name is None:
-        if erro_handler is not None:
+        if error_handler is not None:
             error_handler("ERROR: null username field.")
         return False
     if not user_name.isalnum():
         if " " in user_name:
-            if erro_handler is not None:
+            if error_handler is not None:
                 error_handler("ERROR: username MUST be Alphanumeric")
             return False
     if user_name.startswith(' '):
-        if erro_handler is not None:
+        if error_handler is not None:
             error_handler("ERROR: No Prefixes Allowed in Username")
         return False
     if user_name.endswith(' '):
-        if erro_handler is not None:
+        if error_handler is not None:
             error_handler("ERROR: No Suffixes Allowed in Username")
         return False
     if len(user_name) < 3 or len(user_name) > 19:
-        if erro_handler is not None:
+        if error_handler is not None:
             error_handler("ERROR: Username must be greater than 2"
                           + " characters and less than 20.")
         return False

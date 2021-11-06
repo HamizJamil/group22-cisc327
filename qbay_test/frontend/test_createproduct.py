@@ -433,3 +433,8 @@ class FrontEndProductCreationTest(BaseCase):
         # verifying a product is NOT successfully commited
         new_prod = Product.query.filter_by(title="GGEZ").first()
         assert new_prod is not None
+
+    def test_db(self, *_):
+        products = Product.query.all()
+        for i in products:
+            print(i)
