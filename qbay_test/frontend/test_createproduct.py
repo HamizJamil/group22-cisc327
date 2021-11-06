@@ -212,7 +212,7 @@ class FrontEndProductCreationTest(BaseCase):
         self.type("#user_email", "test0@test.com")
         self.type("#title", "2")
         self.type("#price", 1000)
-        self.type("#description", two_thousand_char_description + "1")
+        self.type("#description", two_thousand_char_description + "11")
         self.find_element("#Save").click()
         # verifying a product is NOT successfully commited
         new_prod = Product.query.filter_by(title="2").first()
