@@ -66,7 +66,7 @@ def registration():
 @app.route("/logout", methods=["GET"])
 def logout():
     usr = session["user"]
-    session.pop("usr", None)
+    session.pop(usr, None)
     flash("You have been logged out successfully!", "info")
     return redirect("/login")
 
@@ -89,8 +89,8 @@ def update_profile():
                               postal_code, error_handler)
         if updated:
             flash("Information Successfully Updated!")
-            return render_template("updateprofile.html")
-    else: 
+        return render_template("updateprofile.html")
+    else:
         return render_template("updateprofile.html")
 
 
@@ -106,7 +106,7 @@ def update_product_post():
     new_price = request.form.get("new_price")
     new_title = request.form.get("new_title")
     new_description = request.form.get("new_description")
-    updated = update_product(title, email, new_price, new_title, 
+    updated = update_product(title, email, new_price, new_title,
                              new_description, error_handler)
     if updated:
         flash("Product Successfully Updated!")

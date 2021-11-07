@@ -2,6 +2,9 @@ from qbay.models import *
 
 
 # using assert keyword to run checks with global backend functions
+def test_register_update():
+    assert register_user('profiletest', 'update@gmail.com', 'ABC@abc') is True
+
 def test_r1_user_register():
     # checking 3 different user situations where 3rd pw is missing special char
     assert register_user('u0X', 'test0@test.com', 'eA123456!') is True
@@ -9,7 +12,7 @@ def test_r1_user_register():
     assert register_user('u0X', 'test0@test.com', '123456') is False
 
 
-def test_r2_login():  
+def test_r2_login():
     # checking a fake user login and verifying its username credential
     user = login('test0@test.com', 'eA123456!')
     assert user is not None
@@ -19,10 +22,10 @@ def test_r2_login():
     assert user is None
 
 
-def test_r3_user_update():  
+def test_r3_user_update():
     # taking passed users from r1 and and checking that the added addy/postal
     # code is valid by returning a user object
-    assert update_user('test0@test.com', 'u1X', '99 University Ave Kingston', 
+    assert update_user('test0@test.com', 'u1X', '99 University Ave Kingston',
                        'K7L 3N6') is not None
     # testing with incorrect addy sequence resulting in no returned user
     assert update_user('test1@test.com', 'u1X', '9! University Ave Kingston ',
@@ -42,9 +45,9 @@ def test_r4_product_create():
 
 def test_r5_product_update():
     # testing updating a prodcut with new description and price
-    assert update_product('iPhone11X New', 'test0@test.com', 1000, 
+    assert update_product('iPhone11X New', 'test0@test.com', 1000,
                           "Coolest Phone Ever", None) is not None
-    assert update_product('iPhone11X Pro', 'test1@test.com', 1500, None, 
+    assert update_product('iPhone11X Pro', 'test1@test.com', 1500, None,
                           "256GB storage and fast") is not None
     # incorrectily updating product with price decrease
     assert update_product('iPhone11X New', 10001, "Coolest Phone Ever", None
@@ -54,7 +57,7 @@ def test_r5_product_update():
 def test_r6_create_review():
     # creating a review with int score
     assert create_review('test1@test.com', 6, "This phone is so good") is True
-    # creating bad review with text score 
+    # creating bad review with text score
     assert create_review('test0@test.com', "Six", "This phone is so good"
                          ) is False
 
