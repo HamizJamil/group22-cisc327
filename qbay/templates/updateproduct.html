@@ -5,32 +5,36 @@
 
 
     <form action="#" method="POST">
-    <P></P>
-     <div class="col px-md-5"><div class="p-3 border bg-light">
+        <P></P>
+        <div class="col px-md-5"><div class="p-3 border bg-light">
 
-        <h3></h3>
-        <p>
-            <label for="ProductID"><h7><span class=" label label-primary">ProductID</label>
-             <input type="text" name="ProductID"/>
-        </p>
-        <p>
-            <label for="Title"><h7><span class=" label label-primary">Title</label>
-            <input type="text" name="title"/>
-        </p>
-        <p>
-            <label for="Price"><h7><span class=" label label-primary">Price</label>
-             <input type="number" name="price" min = "10" max = "10000" step="0.01"/>
-        </p>
-        <P>
-              <label for="Desc"><h7><span class=" label label-primary">Description</span></h7></label>
-        </p>
-        <P>
-            <textarea name="Description" rows="7" style="height:100%" class="form-group w-100"></textarea>
-        </p>
+            <h3></h3>
+            <p>
+                <label for="Owner_email"><h7><span class=" label label-primary">Owner_email</label>
+                <input type="text" name="email" id="email"/>
+            </p>
+            <p>
+                <label for="Title"><h7><span class=" label label-primary">Title</label>
+                <input type="text" name="title" id="title"/>
+            </p>
+            <p>
+                <label for="Title"><h7><span class=" label label-primary"> New Title</label>
+                <input type="text" name="new_title" id="new_title" />
+            </p>
+            <p>
+                <label for="Price"><h7><span class=" label label-primary">New Price</label>
+                <input type="number" name="new_price" id="new_price" min = "10" max = "10000" step="0.01"/>
+            </p>
+            <P>
+                <label for="Desc"><h7><span class=" label label-primary">New Description</span></h7></label>
+            </p>
+            <P>
+                <textarea name="new_description" id="new_description" rows="7" style="height:100%" class="form-group w-100"></textarea>
+            </p>
 
-         <input href="#" type="submit" class="btn btn-secondary" value="Save"\>
-         <a href="userhome" class="btn btn-secondary" role="button">Back</a>
-    </div></div>
+            <input href="#" type="submit" id="Submit" class="btn btn-secondary" value="Save"\>
+            <a href="userhome" class="btn btn-secondary" role="button">Back</a>
+        </div></div>
     </form>
 
 {% endblock %}
