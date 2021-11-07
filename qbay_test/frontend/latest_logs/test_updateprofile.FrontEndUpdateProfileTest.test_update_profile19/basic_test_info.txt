@@ -1,0 +1,26 @@
+test_updateprofile.py::FrontEndUpdateProfileTest::test_update_profile19
+--------------------------------------------------------------------
+Last Page: [WARNING! Browser Not Open!]
+  Browser: chrome
+Timestamp: 1636316865  (Unix Timestamp)
+     Date: Sunday, November 7, 2021
+     Time: 3:27:45 PM  (EDT, UTC-05:00)
+--------------------------------------------------------------------
+Traceback: File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/case.py", line 593, in run
+    self._callTestMethod(testMethod)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/case.py", line 550, in _callTestMethod
+    method()
+  File "/Users/norman/Documents/GitHub/qBay-22/qbay_test/frontend/test_updateprofile.py", line 353, in test_update_profile19
+    self.type("#user_email", "update@gmail.com")  # insert the text fields
+  File "/Users/norman/Queens/nQueen/venv/lib/python3.9/site-packages/seleniumbase/fixtures/base_case.py", line 610, in type
+    self.update_text(selector, text, by=by, timeout=timeout, retry=retry)
+  File "/Users/norman/Queens/nQueen/venv/lib/python3.9/site-packages/seleniumbase/fixtures/base_case.py", line 470, in update_text
+    element = self.wait_for_element_visible(
+  File "/Users/norman/Queens/nQueen/venv/lib/python3.9/site-packages/seleniumbase/fixtures/base_case.py", line 6239, in wait_for_element_visible
+    return page_actions.wait_for_element_visible(
+  File "/Users/norman/Queens/nQueen/venv/lib/python3.9/site-packages/seleniumbase/fixtures/page_actions.py", line 377, in wait_for_element_visible
+    timeout_exception(ElementNotVisibleException, message)
+  File "/Users/norman/Queens/nQueen/venv/lib/python3.9/site-packages/seleniumbase/fixtures/page_actions.py", line 163, in timeout_exception
+    raise exception(message)
+Exception: Message: 
+ Element {#user_email} was not visible after 10 seconds!
