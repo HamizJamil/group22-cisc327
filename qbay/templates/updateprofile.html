@@ -13,21 +13,21 @@
 
         <p>
             <label for="email"><h7><span class=" label label-primary">Email Address</span></h7></label>
-            <input type="email" "col-sm-2 control-label" id="user_email"  name = "user_email" value="{{session["user"]}}" readonly>
+            <input type="email" "col-sm-2 control-label" id="user_email"  name = "user_email">
         </p>
             <label for="user_name">Username:</label>
-            <input type="text" name="user_name"/>
+            <input type="text" name="user_name" id="user_name"/>
         </p>
 
         <p>
             <label for="shipping_address">Shipping Address:</label>
-            <input type="text" name="shipping_address" >
+            <input type="text" name="shipping_address" id="shipping_address" >
         </p>
         <p>
             <label for="postal_code">Postal Code:</label>
-            <input type="text" name="postal_code"/>
+            <input type="text" name="postal_code" id="postal_code"/>
         </p>
-        <p><input href="#" type="submit" class="btn btn-secondary" value="Submit"/>
+        <p><input href="#" type="submit" class="btn btn-secondary" id="Submit" value="Submit"/>
     </form>
     </div></div>
 {% endblock %}

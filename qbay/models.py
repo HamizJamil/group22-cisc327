@@ -9,7 +9,8 @@ import re  # regular expression library
 email_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 password_regex = re.compile(r"^(?=.{6,})(?=.*[a-z])(?=.*[A-Z])" +
                             r"(?=.*[!@#$%^&+=]).*$")
-postal_regex = re.compile(r"[A-Za-z][0-9][A-Za-z] [0-9][A-Za-z][0-9]")
+shipping_regex = re.compile(r"^[A-Za-z0-9,. ';/_-]+$")
+postal_regex = re.compile(r"[A-Za-z][0-9][A-Za-z] ?[0-9][A-Za-z][0-9]$")
 
 db = SQLAlchemy(app)
 
@@ -41,10 +42,10 @@ class User(db.Model):
     # relationship between User and other Models
     products = db.relationship('Product', backref='user', lazy='dynamic')
     reviews = db.relationship('Review', backref='user', lazy='dynamic')
-    transactions = db.relationship('Transaction', backref='user', 
+    transactions = db.relationship('Transaction', backref='user',
                                    lazy='dynamic')
 
-    def __init__(self, email, user_name, password, shipping=None, 
+    def __init__(self, email, user_name, password, shipping=None,
                  post=None, balance=100):
         self.email = email
         self.user_name = user_name
@@ -54,7 +55,7 @@ class User(db.Model):
         self.balance = balance
 
     def __repr__(self):
-        return "User: {}".format(self.user_name, self.email)
+        return "User: {} {}".format(self.user_name, self.email)
 
 
 class Product(db.Model):
@@ -93,7 +94,7 @@ class Product(db.Model):
         self.last_date_modified = today
 
     def __repr__(self):
-        return "Product {}: {} Price: {}".format(self.id, self.title, 
+        return "Product {}: {} Price: {}".format(self.id, self.title,
                                                  self.price)
 
 
@@ -115,7 +116,7 @@ class Transaction(db.Model):
     def __repr__(self):
         return "Transaction {}: {}, date: {}".format(self.id, self.product,
                                                      self.date)
-    
+
     def __init__(self, price, buyer_email):
         self.price = price
         self.buyer_email = buyer_email
@@ -146,7 +147,7 @@ class Review(db.Model):
         self.text = text
 
 
-# function to send errors to frontend 
+# function to send errors to frontend
 
 def error_handler(message):
     flash(message)
@@ -186,8 +187,13 @@ def register_user(user_name, user_email, user_password, error_handler=None):
         if user_password[i].isupper():
             upper_count += 1
     if upper_count == 0:
+<<<<<<< HEAD
         if error_handler is not None:
             error_handler("ERROR: Password does not contain" + 
+=======
+        if erro_handler is not None:
+            error_handler("ERROR: Password does not contain" +
+>>>>>>> 119d0a4d5d7ae5d1e35768ac7b4716f6972964c9
                           " captial characters.")
         return False
     lower_count = 0
@@ -250,7 +256,7 @@ def login(email, password, erro_handler=None):
             upper_count += 1
     if upper_count == 0:
         if erro_handler is not None:
-            error_handler("ERROR: Password does not" + 
+            error_handler("ERROR: Password does not" +
                           " contain captial characters.")
         return None
     lower_count = 0
@@ -281,13 +287,23 @@ def update_user(search_email, new_username=None, shipping_address=None,
 
     # Since account must already be valid/real to be logged in no need to
     # revalidate on user end
-    user_to_be_updated = User.query.filter_by(email=search_email)
+    user_to_be_updated = User.query.filter_by(email=search_email).first()
     if user_to_be_updated is None:
         if erro_handler is not None:
             error_handler("SYSTEM ERROR: Account cannot updated" +
                           " - account not linked")
         return None
     if new_username is not None:
+        if len(new_username) <= 2:
+            if erro_handler is not None:
+                error_handler("ERROR: New Username has to be "
+                              "longer than 2 characters")
+            return None
+        if len(new_username) > 20:
+            if erro_handler is not None:
+                error_handler("ERROR: New Username can't be longer than 20"
+                              "characters")
+            return None
         if new_username == "":  # empty username field
             if erro_handler is not None:
                 error_handler("ERROR: New Username cannot be empty")
@@ -310,21 +326,19 @@ def update_user(search_email, new_username=None, shipping_address=None,
         if erro_handler is not None:
             error_handler("ERROR: Shipping Address cannot be empty")
         return None
-    for char in shipping_address:
-        if char.isalnum() is False and char != " ":
-            if erro_handler is not None:
-                error_handler("ERROR: Shipping Address must be" + 
-                              " all alphanumeric")
-            return None
-        if password_regex.search(char) is not None:
-            if erro_handler is not None:
-                error_handler("ERROR: No Special Characters")
+    shipping_match = re.fullmatch(shipping_regex, shipping_address)
+    if not shipping_match:
+        if erro_handler is not None:
+            error_handler("ERROR: Shipping address has to be alphanumeric")
+        return None
     user_to_be_updated.shipping_address = shipping_address
-    match = re.fullmatch(postal_regex, postal_code)
-    if not match:
+    postal_match = re.fullmatch(postal_regex, postal_code)
+    if not postal_match:
         if erro_handler is not None:
             error_handler("ERROR: Please enter a valid postal code")
-    user_to_be_updated.postal_code = postal_code
+        return None
+    user_to_be_updated.postal_code = postal_code.upper().replace(" ", "")
+    db.session.commit()
     return user_to_be_updated
 
 
@@ -375,7 +389,7 @@ def create_product(title, description, owner_email, price, erro_handler=None):
         return False
     if int(description_size) < 20:
         if erro_handler is not None:
-            error_handler("ERROR: Description Must Be Larger" + 
+            error_handler("ERROR: Description Must Be Larger" +
                           " Than 20 Characters")
         count += 1
         return False
@@ -396,6 +410,7 @@ def create_product(title, description, owner_email, price, erro_handler=None):
         count += 1
         return False
     # if count == 0:
+
     product = Product(title=title, price=price,
                       description=description,
                       owner_email=owner_email)
@@ -410,8 +425,8 @@ def update_product(search_title, owner_email, new_price=None, new_title=None,
     global number_of_products
     # searching for product based off unique ID
     product_to_be_updated = Product.query.filter_by(title=search_title,
-                                                    owner_email=owner_email
-                                                    ).first()
+                                                    owner_email=owner_email)\
+        .first()
     description_size = len(str(new_description))
     title_size = len(str(new_title))
     # parameters are deafaulted to NONE so if no change is made the product
@@ -461,11 +476,12 @@ def update_product(search_title, owner_email, new_price=None, new_title=None,
             return None
         if description_size < 20:
             if erro_handler is not None:
-                error_handler("ERROR: Description Must Be Larger" + 
+                error_handler("ERROR: Description Must Be Larger" +
                               " Than 20 Characters")
             return None
-        product_to_be_updated.product_description = new_description
+        product_to_be_updated.description = new_description
     product_to_be_updated.last_date_modified = date.today()
+    db.session.commit()
     return product_to_be_updated
 
 
@@ -508,4 +524,4 @@ def create_transaction(email, price):
     return True
 
 
-db.create_all() 
+db.create_all()
