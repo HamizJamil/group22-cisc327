@@ -9,16 +9,16 @@ class FrontEndUpdateProfileTest(BaseCase):
 
     # Set of exhaustive input testing
     #
-    # # Correct input test
+    # Correct input test
     def test_update_profile(self, *_):
-        self.open(base_url + '/login') # open up the page
+        self.open(base_url + '/login')  # open up the page
         self.type("#user_email", "update@gmail.com")  # insert the text fields
         self.type("#user_pass", "ABC@abc")
         self.find_element("#login").click()  # click save to submit
         # veryfing that it redirects to homepage
         # verifying a product is successfully commited
 
-        self.open(base_url+ '/updateprofile')
+        self.open(base_url + '/updateprofile')
         self.type("#user_email", "update@gmail.com")
         self.type("#user_name", "profiletest")
         self.type("#shipping_address", "Queens University, "
@@ -37,7 +37,7 @@ class FrontEndUpdateProfileTest(BaseCase):
         self.type("#user_pass", "ABC@abc")
         self.find_element("#login").click()  # click save to submit
 
-        self.open(base_url+ '/updateprofile')
+        self.open(base_url + '/updateprofile')
         self.type("#user_email", "update@gmail.com")
         self.type("#user_name", " profiletest")
         self.type("#shipping_address", "Queens University")
@@ -55,7 +55,7 @@ class FrontEndUpdateProfileTest(BaseCase):
         self.type("#user_pass", "ABC@abc")
         self.find_element("#login").click()  # click save to submit
 
-        self.open(base_url+ '/updateprofile')
+        self.open(base_url + '/updateprofile')
         self.type("#user_email", "update@gmail.com")
         self.type("#user_name", "profiletest ")
         self.type("#shipping_address", "Queens University")
@@ -73,7 +73,7 @@ class FrontEndUpdateProfileTest(BaseCase):
         self.type("#user_pass", "ABC@abc")
         self.find_element("#login").click()  # click save to submit
 
-        self.open(base_url+ '/updateprofile')
+        self.open(base_url + '/updateprofile')
         self.type("#user_email", "update@gmail.com")
         self.type("#user_name", "p")
         self.type("#shipping_address", "Queens University")
@@ -92,7 +92,7 @@ class FrontEndUpdateProfileTest(BaseCase):
         self.type("#user_pass", "ABC@abc")
         self.find_element("#login").click()  # click save to submit
 
-        self.open(base_url+ '/updateprofile')
+        self.open(base_url + '/updateprofile')
         self.type("#user_email", "update@gmail.com")
         self.type("#user_name", longer_than_20)
         self.type("#shipping_address", "Queens University")
@@ -110,7 +110,7 @@ class FrontEndUpdateProfileTest(BaseCase):
         self.type("#user_pass", "ABC@abc")
         self.find_element("#login").click()  # click save to submit
 
-        self.open(base_url+ '/updateprofile')
+        self.open(base_url + '/updateprofile')
         self.type("#user_email", "update@gmail.com")
         self.type("#user_name", "")
         self.type("#shipping_address", "Queens University")
@@ -128,7 +128,7 @@ class FrontEndUpdateProfileTest(BaseCase):
         self.type("#user_pass", "ABC@abc")
         self.find_element("#login").click()  # click save to submit
 
-        self.open(base_url+ '/updateprofile')
+        self.open(base_url + '/updateprofile')
         self.type("#user_email", "update@gmail.com")
         self.type("#user_name", "prof!letest")
         self.type("#shipping_address", "Queens University")
@@ -148,7 +148,7 @@ class FrontEndUpdateProfileTest(BaseCase):
         # veryfing that it redirects to homepage
         # verifying a product is successfully commited
 
-        self.open(base_url+ '/updateprofile')
+        self.open(base_url + '/updateprofile')
         self.type("#user_email", "update@gmail.com")
         self.type("#user_name", "profiletest")
         self.type("#shipping_address", "")
@@ -168,7 +168,7 @@ class FrontEndUpdateProfileTest(BaseCase):
         # veryfing that it redirects to homepage
         # verifying a product is successfully commited
 
-        self.open(base_url+ '/updateprofile')
+        self.open(base_url + '/updateprofile')
         self.type("#user_email", "update@gmail.com")
         self.type("#user_name", "profiletest")
         self.type("#shipping_address", "Queens University, ! "
@@ -183,14 +183,8 @@ class FrontEndUpdateProfileTest(BaseCase):
 
     # correct postal code conversion: lower case to uppercase with no space
     def test_udpate_profile10(self, *_):
-        # self.open(base_url + '/login')  # open up the page
-        # self.type("#user_email", "update@gmail.com")  # insert the text fields
-        # self.type("#user_pass", "ABC@abc")
-        # self.find_element("#login").click()  # click save to submit
-        # veryfing that it redirects to homepage
-        # verifying a product is successfully commited
 
-        self.open(base_url+ '/updateprofile')
+        self.open(base_url + '/updateprofile')
         self.type("#user_email", "update@gmail.com")
         self.type("#user_name", "profiletest")
         self.type("#shipping_address", "Queens University, "
@@ -216,7 +210,7 @@ class FrontEndUpdateProfileTest(BaseCase):
         # veryfing that it redirects to homepage
         # verifying a product is successfully commited
 
-        self.open(base_url+ '/updateprofile')
+        self.open(base_url + '/updateprofile')
         self.type("#user_email", "update@gmail.com")
         self.type("#user_name", "profiletest")
         self.type("#shipping_address", "Queens University, "
