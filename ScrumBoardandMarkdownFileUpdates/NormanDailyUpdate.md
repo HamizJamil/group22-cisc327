@@ -172,5 +172,4 @@
 | 16      | Incorrect username out of range: 2 characters                     | **ERROR: New username has to be longer than 2 characters**  | Username=”pp”         | Profile not updated | As expected   | PASS   |
 | 17      | Correct Postal code: Correct length = 6, Follows X9X9X9           | **Profile updated**                                         | Postal_code=”K7L3N6”  | Profile updated     | As expected   | PASS   |
 | 18      | Correct postal code: Correct length = 7, Follows X9X 9X9          | **Profile updated**                                         | Postal_code=”K7L 3N6” | Profile updated     | As expected   | PASS   |
-| 19      | Incorrect postal code: length = 8 with an extra space in between  | **ERROR: Please enter a valid postal code**                 | Postal_code=”K7L 3N6” | Profile not updated | As expected   | PASS   |
-| 20      | Incorrect postal code: correct length wrong order 9X9X9X          | **ERROR: Please enter a valid postal code**                 | Username=”3N6K7L”     | Profile not updated | As expected   | PASS   |
+| 19      | Incorrect postal code: correct length wrong order 9X9X9X          | **ERROR: Please enter a valid postal code**                 | Username=”3N6K7L”     | Profile not updated | As expected   | PASS   |
