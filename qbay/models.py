@@ -405,6 +405,7 @@ def create_product(title, description, owner_email, price, erro_handler=None):
         count += 1
         return False
     # if count == 0:
+
     product = Product(title=title, price=price,
                       description=description,
                       owner_email=owner_email)
@@ -419,8 +420,8 @@ def update_product(search_title, owner_email, new_price=None, new_title=None,
     global number_of_products
     # searching for product based off unique ID
     product_to_be_updated = Product.query.filter_by(title=search_title,
-                                                    owner_email=owner_email
-                                                    ).first()
+                                                    owner_email=owner_email)\
+        .first()
     description_size = len(str(new_description))
     title_size = len(str(new_title))
     # parameters are deafaulted to NONE so if no change is made the product
@@ -473,8 +474,9 @@ def update_product(search_title, owner_email, new_price=None, new_title=None,
                 error_handler("ERROR: Description Must Be Larger" +
                               " Than 20 Characters")
             return None
-        product_to_be_updated.product_description = new_description
+        product_to_be_updated.description = new_description
     product_to_be_updated.last_date_modified = date.today()
+    db.session.commit()
     return product_to_be_updated
 
 

@@ -37,6 +37,8 @@ def test_r4_product_create():
     # testing creating a product with proper credentials
     assert create_product('iPhone11X New', 'Brand New iPhone11X 2020',
                           'test0@test.com', 600) is True
+    assert create_product('Gloves', 'Winning Gloves 12 Oz',
+                          'test0@test.com', 250) is True
     # testing creating a product with different correct credentials
     assert create_product('iPhone11X Pro', 'This iPhone is so powerful',
                           'test1@test.com', 1000) is True
