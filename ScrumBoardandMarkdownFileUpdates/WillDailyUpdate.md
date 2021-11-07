@@ -1,9 +1,8 @@
-## William Kennedy
 # MONDAY
 
 1.  what is the branch he/she worked on (must be pushed to the repo)?
 
-    -   test_create_product
+    -   will_A4_Sprint
 
 2.  what is the progress so far (at least some test cases written, more than 2)?
 
@@ -83,57 +82,54 @@
 
 # Test Cases
 
-1.  **State Test** – verifies whether the important features are working and
-    that there is no bugs or unintended actions on the build. Functional testing
-    format that will give our team confidence in the build and further testing.
+1.  **State Transition Test** – verifies that our product page has proper functionality when transitioning to homepage after successful creation or back to home with no commit if backbutton selected. Functional testing format that will give our team confidence in the build and further testing.
 
 | **Test ID** | **Test Scenarios** | **Description**                                                                                               | **Test Step**                                                                                                                                                                                                                                                                                               | **Expected Result**                           | **Actual Result** | **Status**  |
 |-------------|--------------------|---------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------|-------------------|-------------|
 | 1           | Creating Product   | Test the create product functionality of our Qbay web application to ensure users can create products to sell | Create Dummy User Owner Navigate from register page to create-product page Enter valid title that is all numeric, no prefix or suffix space, size \< 80 char Enter valid description. That is larger than title and \< 2000 char Enter a valid price between \$10-\$10000CAD Click on create product button | Product should be successfully created        | As expected       | PASS        |
 | 2           | Creating Product   | Test the create product functionality of our Qbay web application to ensure users can create products to sell | Create Dummy User Owner Navigate from register page to create-product page Enter valid title that is all numeric, no prefix or suffix space, size \< 80 char Enter valid description. That is larger than title and \< 2000 char Enter a valid price between \$10-\$10000CAD Click on BACK button           | Product should be NOT BE successfully created | As expected       | PASS        |
 
-2.  **Boundary Value Tests** – will test the system and its boundaries to ensure
+1.  **Boundary Value Tests** – will test the system and its boundaries to ensure
     the limits result in the proper results. On top of that it will expose any
     underlying integration issues.
 
 | Test ID | Test Scenario  | Input                                    | Expected Result                        | Actual Result | Status |
 |---------|----------------|------------------------------------------|----------------------------------------|---------------|--------|
-| 3       | Create Product | **Product Title is 1 character**         | Product should be successfully created | As expected   | TBD    |
-| 4       | Create Product | **Product Title is 80 Characters**       | Product should be successfully created | As expected   | TBD    |
-| 5       | Create Product | **Product Description 20 characters**    | Product should be successfully created | As expected   | TBD    |
-| 6       | Create Product | **Product Description 2000 characters**  | Product should be successfully created | As expected   | TBD    |
-| 7       | Create Product | **Product Price is 10**                  | Product should be successfully created | As expected   | TBD    |
-| 8       | Create Product | **Product Price is 10000**               | Product should be successfully created | As expected   | TBD    |
+| 3       | Create Product | **Product Title is 1 character**         | Product should be successfully created | As expected   | PASS   |
+| 4       | Create Product | **Product Title is 80 Characters**       | Product should be successfully created | As expected   | PASS   |
+| 5       | Create Product | **Product Description 20 characters**    | Product should be successfully created | As expected   | PASS   |
+| 6       | Create Product | **Product Description 2000 characters**  | Product should be successfully created | As expected   | PASS   |
+| 7       | Create Product | **Product Price is 10**                  | Product should be successfully created | As expected   | PASS   |
+| 8       | Create Product | **Product Price is 10000**               | Product should be successfully created | As expected   | PASS   |
 
 | Test ID | Test Scenario  | Input                                    | Expected Result                            | Actual Result | Status |
 |---------|----------------|------------------------------------------|--------------------------------------------|---------------|--------|
-| 9       | Create Product | **Product Title is 0 character**         | Product should NOT be successfully created | As expected   | TBD    |
-| 10      | Create Product | **Product Title is 81 Characters**       | Product should NOT be successfully created | As expected   | TBD    |
-| 11      | Create Product | **Product Description 19 characters**    | Product should NOT be successfully created | As expected   | TBD    |
-| 12      | Create Product | **Product Description 2001 characters**  | Product should NOT be successfully created | As expected   | TBD    |
-| 13      | Create Product | **Product Price is 9**                   | Product should NOT be successfully created | As expected   | TBD    |
-| 14      | Create Product | **Product Price is 10001**               | Product should NOT be successfully created | As expected   | TBD    |
+| 9       | Create Product | **Product Title is 0 character**         | Product should NOT be successfully created | As expected   | PASS   |
+| 10      | Create Product | **Product Title is 81 Characters**       | Product should NOT be successfully created | As expected   | PASS   |
+| 11      | Create Product | **Product Description 19 characters**    | Product should NOT be successfully created | As expected   | PASS   |
+| 12      | Create Product | **Product Description 2001 characters**  | Product should NOT be successfully created | As expected   | PASS   |
+| 13      | Create Product | **Product Price is 9**                   | Product should NOT be successfully created | As expected   | PASS   |
+| 14      | Create Product | **Product Price is 10001**               | Product should NOT be successfully created | As expected   | PASS   |
 
-3.  **Decision Table Testing** – will identify all the rules that will allow for
+1.  **Decision Table Testing** – will identify all the rules that will allow for
     a product to be created and updated. This will highlight the requirements
     from A2.
 
 | Test ID | Test Scenario  | Input                                                                                                                        | Expected Result                            | Actual Result | Status |
 |---------|----------------|------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|---------------|--------|
-| 15      | Create Product | **Email is not valid**  **Product Title is 81 Characters**   **Product Description 19 characters**  **Product Price is 9**   | Product should NOT be successfully created | As expected   | TBD    |
-| 16      | Create Product | **Email is not valid**  **Product Title is 81 Characters**   **Product Description 19 characters**  **Product Price is 10**  | Product should NOT be successfully created | As expected   | TBD    |
-| 17      | Create Product | **Email is not valid**  **Product Title is 81 Characters**   **Product Description 20 characters**  **Product Price is 9**   | Product should NOT be successfully created | As expected   | TBD    |
-| 18      | Create Product | **Email is not valid**  **Product Title is 81 Characters**   **Product Description 20 characters**  **Product Price is 10**  | Product should NOT be successfully created | As expected   | TBD    |
-| 19      | Create Product | **Email is not valid**  **Product Title is 80 Characters**   **Product Description 19 characters**  **Product Price is 9**   | Product should NOT be successfully created | As expected   | TBD    |
-| 20      | Create Product | **Email is not valid**  **Product Title is 80 Characters**   **Product Description 19 characters**  **Product Price is 10**  | Product should NOT be successfully created | As expected   | TBD    |
-| 21      | Create Product | **Email is not valid**  **Product Title is 80 Characters**   **Product Description 20 characters**  **Product Price is 9**   | Product should NOT be successfully created | As expected   |        |
-| 22      | Create Product | **Email is not valid**  **Product Title is 80 Characters**   **Product Description 20 characters**  **Product Price is 10**  | Product should NOT be successfully created | As expected   |        |
-| 23      | Create Product | **Email is valid**  **Product Title is 81 Characters**   **Product Description 19 characters**  **Product Price is 9**       | Product should NOT be successfully created | As expected   |        |
-| 24      | Create Product | **Email is valid**  **Product Title is 81 Characters**   **Product Description 19 characters**  **Product Price is 10**      | Product should NOT be successfully created | As expected   |        |
-| 25      | Create Product | **Email is valid**  **Product Title is 81 Characters**   **Product Description 20 characters**  **Product Price is 9**       | Product should NOT be successfully created | As expected   |        |
-| 26      | Create Product | **Email is valid**  **Product Title is 81 Characters**   **Product Description 20 characters**  **Product Price is 10**      | Product should NOT be successfully created | As expected   |        |
-| 27      | Create Product | **Email is valid**  **Product Title is 80 Characters**   **Product Description 19 characters**  **Product Price is 9**       | Product should NOT be successfully created | As expected   |        |
-| 28      | Create Product | **Email is valid**  **Product Title is 80 Characters**   **Product Description 19 characters**  **Product Price is 10**      | Product should NOT be successfully created | As expected   |        |
-| 29      | Create Product | **Email is valid**  **Product Title is 80 Characters**   **Product Description 20 characters**  **Product Price is 9**       | Product should NOT be successfully created | As expected   |        |
-| 30      | Create Product | **Email is valid**  **Product Title is 80 Characters**   **Product Description 20 characters**  **Product Price is 10**      | Product should be successfully created     | As expected   |        |
-
+| 15      | Create Product | **Email is not valid**  **Product Title is 81 Characters**   **Product Description 19 characters**  **Product Price is 9**   | Product should NOT be successfully created | As expected   | PASS   |
+| 16      | Create Product | **Email is not valid**  **Product Title is 81 Characters**   **Product Description 19 characters**  **Product Price is 10**  | Product should NOT be successfully created | As expected   | PASS   |
+| 17      | Create Product | **Email is not valid**  **Product Title is 81 Characters**   **Product Description 20 characters**  **Product Price is 9**   | Product should NOT be successfully created | As expected   | PASS   |
+| 18      | Create Product | **Email is not valid**  **Product Title is 81 Characters**   **Product Description 20 characters**  **Product Price is 10**  | Product should NOT be successfully created | As expected   | PASS   |
+| 19      | Create Product | **Email is not valid**  **Product Title is 80 Characters**   **Product Description 19 characters**  **Product Price is 9**   | Product should NOT be successfully created | As expected   | PASS   |
+| 20      | Create Product | **Email is not valid**  **Product Title is 80 Characters**   **Product Description 19 characters**  **Product Price is 10**  | Product should NOT be successfully created | As expected   | PASS   |
+| 21      | Create Product | **Email is not valid**  **Product Title is 80 Characters**   **Product Description 20 characters**  **Product Price is 9**   | Product should NOT be successfully created | As expected   | PASS   |
+| 22      | Create Product | **Email is not valid**  **Product Title is 80 Characters**   **Product Description 20 characters**  **Product Price is 10**  | Product should NOT be successfully created | As expected   | PASS   |
+| 23      | Create Product | **Email is valid**  **Product Title is 81 Characters**   **Product Description 19 characters**  **Product Price is 9**       | Product should NOT be successfully created | As expected   | PASS   |
+| 24      | Create Product | **Email is valid**  **Product Title is 81 Characters**   **Product Description 19 characters**  **Product Price is 10**      | Product should NOT be successfully created | As expected   | PASS   |
+| 25      | Create Product | **Email is valid**  **Product Title is 81 Characters**   **Product Description 20 characters**  **Product Price is 9**       | Product should NOT be successfully created | As expected   | PASS   |
+| 26      | Create Product | **Email is valid**  **Product Title is 81 Characters**   **Product Description 20 characters**  **Product Price is 10**      | Product should NOT be successfully created | As expected   | PASS   |
+| 27      | Create Product | **Email is valid**  **Product Title is 80 Characters**   **Product Description 19 characters**  **Product Price is 9**       | Product should NOT be successfully created | As expected   | PASS   |
+| 28      | Create Product | **Email is valid**  **Product Title is 80 Characters**   **Product Description 19 characters**  **Product Price is 10**      | Product should NOT be successfully created | As expected   | PASS   |
+| 29      | Create Product | **Email is valid**  **Product Title is 80 Characters**   **Product Description 20 characters**  **Product Price is 9**       | Product should NOT be successfully created | As expected   | PASS   |
+| 30      | Create Product | **Email is valid**  **Product Title is 80 Characters**   **Product Description 20 characters**  **Product Price is 10**      | Product should be successfully created     | As expected   | PASS   |
