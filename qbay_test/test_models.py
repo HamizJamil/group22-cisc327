@@ -5,6 +5,7 @@ from qbay.models import *
 def test_register_update():
     assert register_user('profiletest', 'update@gmail.com', 'ABC@abc') is True
 
+
 def test_r1_user_register():
     # checking 3 different user situations where 3rd pw is missing special char
     assert register_user('u0X', 'test0@test.com', 'eA123456!') is True
