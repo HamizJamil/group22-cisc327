@@ -1,8 +1,6 @@
 from seleniumbase import BaseCase
 from qbay_test.conftest import base_url
-from unittest.mock import patch
 from qbay.models import User
-from selenium import webdriver
 
 
 class FrontEndUpdateProfileTest(BaseCase):
@@ -365,6 +363,3 @@ class FrontEndUpdateProfileTest(BaseCase):
         updated = User.query.filter_by(email="update@gmail.com").first()
 
         assert updated.postal_code != "3N6K7L"
-
-
-
