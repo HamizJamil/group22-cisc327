@@ -7,6 +7,22 @@ from qbay import app
 from qbay.models import *
 
 
+def authenticate(inner_function):
+
+    def wrapped_inner():
+        if 'logged_in' in session:
+            email = session['logged_in']
+            try:
+                user = User.query.filter_by(email=email).one_or_none()
+                if user:
+                    return inner_function(user)
+            except Exception:
+                pass
+        else:
+            return redirect('/login')
+    return wrapped_inner
+
+
 @app.route('/login', methods=['GET'])
 def login_get():
     return render_template("login.html")
@@ -19,8 +35,8 @@ def login_post():
     session.permanent = True
     found_user = login(email, password, error_handler)
     if found_user:
-        session["user"] = email
-        return render_template("userhome.html")
+        session["logged_in"] = found_user.email
+        return redirect('/userhome', code=303)  # forcing a get request
     else:
         return render_template("login.html")
 
@@ -72,10 +88,11 @@ def logout():
 
 
 @app.route("/", methods=["GET"])
-def home():
+@authenticate
+def home(user):
     user = request.form.get("user_email")
     session["user"] = user
-    return render_template("home.html")
+    return render_template("userhome.html")
 
 
 @app.route("/updateprofile", methods=["POST", "GET"])
@@ -117,4 +134,6 @@ def update_product_post():
 
 @app.route("/userhome", methods=["GET"])
 def user_home():
+    if 'logged_in' in session:
+        session.pop('logged_in', None)
     return render_template("userhome.html")
