@@ -1,6 +1,7 @@
 from seleniumbase import BaseCase
 from qbay_test.conftest import base_url
 from qbay.models import User
+from cryptography import fernet
 
 
 class FrontEndProductUpdateTest(BaseCase):
@@ -150,7 +151,7 @@ class FrontEndProductUpdateTest(BaseCase):
         self.find_element("#Submit").click()  # click save to submit
         # verifying user isn't made
         new_user = User.query.filter_by(user_name="john1234678" +
-                                        "910111213555").first()
+                                                  "910111213555").first()
         assert new_user is None
 
     # username less than 3 char
@@ -187,7 +188,7 @@ class FrontEndProductUpdateTest(BaseCase):
         self.find_element("#Submit").click()  # click save to submit
         # verifying user is made
         new_user = User.query.filter_by(user_name="john12345678" +
-                                        "9123456").first()
+                                                  "9123456").first()
         assert new_user is not None
 
     # 3 character username
@@ -199,4 +200,14 @@ class FrontEndProductUpdateTest(BaseCase):
         self.find_element("#Submit").click()  # click save to submit
         # verifying user is made
         new_user = User.query.filter_by(user_name="jo3").first()
+        assert new_user is not None
+
+    def test_register_17(self, *_):
+        self.open(base_url + '/registration')  # open up the page
+        self.type("#user_name", "test0")  # insert the text fields
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#Submit").click()  # click save to submit
+        # verifying user is made
+        new_user = User.query.filter_by(user_name="test0").first()
         assert new_user is not None

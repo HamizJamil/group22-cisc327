@@ -1,30 +1,23 @@
 from flask import Flask, redirect, url_for, render_template
 from flask import request, session, flash
-from datetime import date
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.attributes import flag_modified
 from qbay import app
 from qbay.models import *
 
-
-def authenticate(inner_function):
-
-    def wrapped_inner():
-        if 'logged_in' in session:
-            email = session['logged_in']
-            try:
-                user = User.query.filter_by(email=email).one_or_none()
-                if user:
-                    return inner_function(user)
-            except Exception:
-                pass
-        else:
-            return redirect('/login')
-    return wrapped_inner
-
+# only authorize user who logged in can do update profile, create product and update product for same user
+def authenticate(req_email):
+    authorized = True
+    if "user_email" not in session or req_email != session["user_email"]:
+        flash("Uer is not authorized, please login")
+        authorized = False
+    return authorized
 
 @app.route('/login', methods=['GET'])
 def login_get():
+    if "user_email" in session:
+        render_template("userhome.html")
     return render_template("login.html")
 
 
@@ -32,12 +25,13 @@ def login_get():
 def login_post():
     email = request.form["user_email"]
     password = request.form["user_pass"]
-    session.permanent = True
     found_user = login(email, password, error_handler)
     if found_user:
-        session["logged_in"] = found_user.email
-        return redirect('/userhome', code=303)  # forcing a get request
+        session.permanent = True
+        session["user_email"] = email
+        return render_template("userhome.html")
     else:
+        flash("user and/or password mismatched")
         return render_template("login.html")
 
 
@@ -49,10 +43,12 @@ def create_product_get():
 @app.route("/createproduct", methods=["POST"])
 def create_product_post():
     user_email = request.form.get("user_email")
+    if not authenticate(user_email):
+        return redirect("/login")
     current_user = User.query.filter_by(email=user_email).first()
     title = request.form.get("title")
     description = request.form.get("description")
-    price = int(request.form.get("price"))
+    price = float(request.form.get("price"))
     new_product = create_product(title, description, user_email,
                                  price, error_handler)
     if new_product:
@@ -61,13 +57,10 @@ def create_product_post():
     else:
         return render_template("createproduct.html")
 
-
 @app.route("/registration", methods=["POST", "GET"])
 def registration():
     if request.method == "POST":
         email = request.form.get("user_email")
-        session["user"] = email
-        session.permanent = True
         password = request.form.get("user_pass")
         user_name = request.form.get("user_name")
         found_user = register_user(user_name, email, password, error_handler)
@@ -78,27 +71,27 @@ def registration():
     else:
         return render_template("registration.html")
 
-
 @app.route("/logout", methods=["GET"])
 def logout():
-    usr = session["user"]
-    session.pop(usr, None)
+    session.pop("user_email", None)
     flash("You have been logged out successfully!", "info")
     return redirect("/login")
 
 
 @app.route("/", methods=["GET"])
-@authenticate
-def home(user):
-    user = request.form.get("user_email")
-    session["user"] = user
-    return render_template("userhome.html")
+def home():
+    if "user_email" in session:
+        return render_template("home.html")
+    else:
+        return redirect("/login")
 
 
 @app.route("/updateprofile", methods=["POST", "GET"])
 def update_profile():
     if request.method == "POST":
         email = request.form["user_email"]
+        if not authenticate(email):
+            return redirect("/login")
         new_username = request.form["user_name"]
         shipping_address = request.form["shipping_address"]
         postal_code = request.form["postal_code"]
@@ -120,6 +113,8 @@ def update_product_get():
 def update_product_post():
     title = request.form.get("title")
     email = request.form.get("email")
+    if not authenticate(email):
+        return redirect("/login")
     new_price = request.form.get("new_price")
     new_title = request.form.get("new_title")
     new_description = request.form.get("new_description")
@@ -134,6 +129,4 @@ def update_product_post():
 
 @app.route("/userhome", methods=["GET"])
 def user_home():
-    if 'logged_in' in session:
-        session.pop('logged_in', None)
     return render_template("userhome.html")
