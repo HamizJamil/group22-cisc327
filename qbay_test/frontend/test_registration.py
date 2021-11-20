@@ -201,13 +201,3 @@ class FrontEndProductUpdateTest(BaseCase):
         # verifying user is made
         new_user = User.query.filter_by(user_name="jo3").first()
         assert new_user is not None
-
-    def test_register_17(self, *_):
-        self.open(base_url + '/registration')  # open up the page
-        self.type("#user_name", "test0")  # insert the text fields
-        self.type("#user_email", "test0@test.com")  # insert the text fields
-        self.type("#user_pass", "eA123456!")
-        self.find_element("#Submit").click()  # click save to submit
-        # verifying user is made
-        new_user = User.query.filter_by(user_name="test0").first()
-        assert new_user is not None

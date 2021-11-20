@@ -6,13 +6,14 @@ from sqlalchemy.orm.attributes import flag_modified
 from qbay import app
 from qbay.models import *
 
-# only authorize user who logged in can do update profile, create product and update product for same user
+
 def authenticate(req_email):
     authorized = True
     if "user_email" not in session or req_email != session["user_email"]:
         flash("Uer is not authorized, please login")
         authorized = False
     return authorized
+
 
 @app.route('/login', methods=['GET'])
 def login_get():
@@ -57,6 +58,7 @@ def create_product_post():
     else:
         return render_template("createproduct.html")
 
+
 @app.route("/registration", methods=["POST", "GET"])
 def registration():
     if request.method == "POST":
@@ -70,6 +72,7 @@ def registration():
             return render_template("registration.html")
     else:
         return render_template("registration.html")
+
 
 @app.route("/logout", methods=["GET"])
 def logout():

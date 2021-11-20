@@ -72,7 +72,7 @@ class FrontEndProductCreationTest(BaseCase):
         self.type("#price", 1000)
         self.type("#description", "Brandproduct-New, so good and fast")
         self.find_element("#Save").click()  # click save to submit
-        # verifying that it stays in same page to give opportunity to create more products
+        # verifying that it stays in the same page
         self.assert_title("Home Page")
         # verifying a product is successfully commited
         new_prod = Product.query.filter_by(title="Iphone 11 Max Pro").all()

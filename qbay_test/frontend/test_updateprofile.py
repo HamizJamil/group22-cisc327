@@ -5,7 +5,7 @@ from qbay.models import User
 
 class FrontEndUpdateProfileTest(BaseCase):
 
-    # Smoke Test - Register Update user and then Verifying the user can access update profile
+    # Smoke Test - Register Update user and verify access to update profile
     def test_update_profile1(self):
         self.open(base_url + '/registration')  # open up the page
         self.type("#user_name", "profiletest")  # insert the text fields
@@ -212,7 +212,7 @@ class FrontEndUpdateProfileTest(BaseCase):
         self.find_element("#Submit").click()
 
         updated = User.query.filter_by(email="update@gmail.com").first()
-        assert updated.postal_code=="K8L3N6"
+        assert updated.postal_code == "K8L3N6"
         assert updated is not None
 
         # assert updated.user_name == "profiletest"
