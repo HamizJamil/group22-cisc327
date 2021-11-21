@@ -1,0 +1,193 @@
+The scans on my terminal:
+██████╗ ██╗    ██╗███╗   ██╗██╗  ██╗███████╗███████╗
+██╔══██╗██║    ██║████╗  ██║╚██╗██╔╝██╔════╝██╔════╝
+██████╔╝██║ █╗ ██║██╔██╗ ██║ ╚███╔╝ ███████╗███████╗ {v0.5 Final}
+██╔═══╝ ██║███╗██║██║╚██╗██║ ██╔██╗ ╚════██║╚════██║ https://github.com/pwn0sec/PwnXSS
+██║     ╚███╔███╔╝██║ ╚████║██╔╝ ██╗███████║███████║
+╚═╝      ╚══╝╚══╝ ╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝╚══════╝
+<<<<<<< STARTING >>>>>>>
+
+[11:43:56] [INFO] Starting PwnXSS...
+***************
+[11:43:56] [INFO] Checking connection to: http://127.0.0.1:8081/
+[11:43:56] [INFO] Connection estabilished 200
+[11:43:56] [WARNING] Target have form with POST method: http://127.0.0.1:8081/
+[11:43:56] [INFO] Collecting form input key.....
+[11:43:56] [INFO] Sending payload (POST) method...
+[11:43:56] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[11:43:56] [INFO] Checking connection to: http://127.0.0.1:8081/
+[11:43:56] [INFO] Connection estabilished 200
+[11:43:56] [WARNING] Target have form with POST method: http://127.0.0.1:8081/
+[11:43:56] [INFO] Collecting form input key.....
+[11:43:56] [INFO] Sending payload (POST) method...
+[11:43:56] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[11:43:56] [INFO] Checking connection to: http://127.0.0.1:8081/updateprofile
+[11:43:56] [INFO] Connection estabilished 200
+[11:43:56] [WARNING] Target have form with POST method: http://127.0.0.1:8081/updateprofile
+[11:43:56] [INFO] Collecting form input key.....
+[11:43:56] [INFO] Form key name: user_email value: <script>prompt(5000/200)</script>
+[11:43:56] [INFO] Form key name: user_name value: <script>prompt(5000/200)</script>
+[11:43:56] [INFO] Form key name: shipping_address value: <script>prompt(5000/200)</script>
+[11:43:56] [INFO] Form key name: postal_code value: <script>prompt(5000/200)</script>
+[11:43:56] [INFO] Internal error: 'name'
+[11:43:56] [INFO] Sending payload (POST) method...
+[11:43:56] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[11:43:56] [INFO] Checking connection to: http://127.0.0.1:8081/login
+[11:43:56] [INFO] Connection estabilished 200
+[11:43:56] [WARNING] Target have form with POST method: http://127.0.0.1:8081/login
+[11:43:56] [INFO] Collecting form input key.....
+[11:43:56] [INFO] Form key name: user_email value: <script>prompt(5000/200)</script>
+[11:43:56] [INFO] Form key name: user_pass value: <script>prompt(5000/200)</script>
+[11:43:56] [INFO] Internal error: 'name'
+[11:43:56] [INFO] Sending payload (POST) method...
+[11:43:56] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[11:43:57] [INFO] Checking connection to: http://127.0.0.1:8081/logout
+[11:43:57] [INFO] Connection failed 500
+***************
+[11:43:57] [INFO] Checking connection to: http://127.0.0.1:8081/createproduct
+[11:43:57] [INFO] Connection estabilished 200
+[11:43:57] [WARNING] Target have form with POST method: http://127.0.0.1:8081/createproduct
+[11:43:57] [INFO] Collecting form input key.....
+[11:43:57] [INFO] Form key name: user_email value: <script>prompt(5000/200)</script>
+[11:43:57] [INFO] Form key name: title value: <script>prompt(5000/200)</script>
+[11:43:57] [INFO] Form key name: price value: <script>prompt(5000/200)</script>
+[11:43:57] [INFO] Internal error: 'type'
+[11:43:57] [INFO] Internal error: 'name'
+[11:43:57] [INFO] Sending payload (POST) method...
+[11:43:57] [CRITICAL] Detected XSS (POST) at http://127.0.0.1:8081/createproduct
+[11:43:57] [CRITICAL] Post data: {'user_email': '<script>prompt(5000/200)</script>', 'title': '<script>prompt(5000/200)</script>', 'price': '<script>prompt(5000/200)</script>'}
+***************
+[11:43:57] [INFO] Checking connection to: http://127.0.0.1:8081/userhome
+[11:43:57] [INFO] Connection estabilished 200
+[11:43:57] [WARNING] Target have form with POST method: http://127.0.0.1:8081/
+[11:43:57] [INFO] Collecting form input key.....
+[11:43:57] [INFO] Sending payload (POST) method...
+[11:43:57] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[11:43:57] [INFO] Checking connection to: http://127.0.0.1:8081/updateproduct
+[11:43:57] [INFO] Connection estabilished 200
+[11:43:57] [WARNING] Target have form with POST method: http://127.0.0.1:8081/updateproduct
+[11:43:57] [INFO] Collecting form input key.....
+[11:43:57] [INFO] Form key name: email value: <script>prompt(5000/200)</script>
+[11:43:57] [INFO] Form key name: title value: <script>prompt(5000/200)</script>
+[11:43:57] [INFO] Form key name: new_title value: <script>prompt(5000/200)</script>
+[11:43:57] [INFO] Form key name: new_price value: <script>prompt(5000/200)</script>
+[11:43:57] [INFO] Internal error: 'type'
+[11:43:57] [INFO] Internal error: 'name'
+[11:43:57] [INFO] Sending payload (POST) method...
+[11:43:57] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[11:43:57] [INFO] Checking connection to: http://127.0.0.1:8081/registration
+[11:43:57] [INFO] Connection estabilished 200
+[11:43:57] [WARNING] Target have form with POST method: http://127.0.0.1:8081/registration
+[11:43:57] [INFO] Collecting form input key.....
+[11:43:57] [INFO] Form key name: user_email value: <script>prompt(5000/200)</script>
+[11:43:57] [INFO] Form key name: user_name value: <script>prompt(5000/200)</script>
+[11:43:57] [INFO] Form key name: user_pass value: <script>prompt(5000/200)</script>
+[11:43:57] [INFO] Internal error: 'name'
+[11:43:57] [INFO] Sending payload (POST) method...
+[11:43:57] [INFO] Parameter page using (POST) payloads but not 100% yet...
+python pwnxss.py -u http://127.0.0.1:8081/ --cookie='{"session":"eyJfcGVybWFuZW50Ijp0cnVlLCJ1c2VyIjoiMTduYTRAcXVlZW5zdS5jYSJ9.YZlzOg.ebEpGxvabL9t0XQ9bwj-PqX1Wfo"}'
+██████╗ ██╗    ██╗███╗   ██╗██╗  ██╗███████╗███████╗
+██╔══██╗██║    ██║████╗  ██║╚██╗██╔╝██╔════╝██╔════╝
+██████╔╝██║ █╗ ██║██╔██╗ ██║ ╚███╔╝ ███████╗███████╗ {v0.5 Final}
+██╔═══╝ ██║███╗██║██║╚██╗██║ ██╔██╗ ╚════██║╚════██║ https://github.com/pwn0sec/PwnXSS
+██║     ╚███╔███╔╝██║ ╚████║██╔╝ ██╗███████║███████║
+╚═╝      ╚══╝╚══╝ ╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝╚══════╝
+<<<<<<< STARTING >>>>>>>
+
+[17:17:19] [INFO] Starting PwnXSS...
+***************
+[17:17:19] [INFO] Checking connection to: http://127.0.0.1:8081/
+[17:17:19] [INFO] Connection estabilished 200
+[17:17:19] [WARNING] Target have form with POST method: http://127.0.0.1:8081/
+[17:17:19] [INFO] Collecting form input key.....
+[17:17:19] [INFO] Sending payload (POST) method...
+[17:17:19] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[17:17:19] [INFO] Checking connection to: http://127.0.0.1:8081/
+[17:17:19] [INFO] Connection estabilished 200
+[17:17:19] [WARNING] Target have form with POST method: http://127.0.0.1:8081/
+[17:17:19] [INFO] Collecting form input key.....
+[17:17:19] [INFO] Sending payload (POST) method...
+[17:17:19] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[17:17:19] [INFO] Checking connection to: http://127.0.0.1:8081/updateprofile
+[17:17:20] [INFO] Connection estabilished 200
+[17:17:20] [WARNING] Target have form with POST method: http://127.0.0.1:8081/updateprofile
+[17:17:20] [INFO] Collecting form input key.....
+[17:17:20] [INFO] Form key name: user_email value: <script>prompt(5000/200)</script>
+[17:17:20] [INFO] Form key name: user_name value: <script>prompt(5000/200)</script>
+[17:17:20] [INFO] Form key name: shipping_address value: <script>prompt(5000/200)</script>
+[17:17:20] [INFO] Form key name: postal_code value: <script>prompt(5000/200)</script>
+[17:17:20] [INFO] Internal error: 'name'
+[17:17:20] [INFO] Sending payload (POST) method...
+[17:17:20] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[17:17:20] [INFO] Checking connection to: http://127.0.0.1:8081/login
+[17:17:20] [INFO] Connection estabilished 200
+[17:17:20] [WARNING] Target have form with POST method: http://127.0.0.1:8081/login
+[17:17:20] [INFO] Collecting form input key.....
+[17:17:20] [INFO] Form key name: user_email value: <script>prompt(5000/200)</script>
+[17:17:20] [INFO] Form key name: user_pass value: <script>prompt(5000/200)</script>
+[17:17:20] [INFO] Internal error: 'name'
+[17:17:20] [INFO] Sending payload (POST) method...
+[17:17:20] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[17:17:20] [INFO] Checking connection to: http://127.0.0.1:8081/logout
+[17:17:20] [INFO] Connection estabilished 200
+[17:17:20] [WARNING] Target have form with POST method: http://127.0.0.1:8081/logout
+[17:17:20] [INFO] Collecting form input key.....
+[17:17:20] [INFO] Form key name: user_email value: <script>prompt(5000/200)</script>
+[17:17:20] [INFO] Form key name: user_pass value: <script>prompt(5000/200)</script>
+[17:17:20] [INFO] Internal error: 'name'
+[17:17:20] [INFO] Sending payload (POST) method...
+[17:17:20] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[17:17:20] [INFO] Checking connection to: http://127.0.0.1:8081/createproduct
+[17:17:20] [INFO] Connection estabilished 200
+[17:17:20] [WARNING] Target have form with POST method: http://127.0.0.1:8081/createproduct
+[17:17:20] [INFO] Collecting form input key.....
+[17:17:20] [INFO] Form key name: user_email value: <script>prompt(5000/200)</script>
+[17:17:20] [INFO] Form key name: title value: <script>prompt(5000/200)</script>
+[17:17:20] [INFO] Form key name: price value: <script>prompt(5000/200)</script>
+[17:17:20] [INFO] Internal error: 'type'
+[17:17:20] [INFO] Internal error: 'name'
+[17:17:20] [INFO] Sending payload (POST) method...
+[17:17:20] [CRITICAL] Detected XSS (POST) at http://127.0.0.1:8081/createproduct
+[17:17:20] [CRITICAL] Post data: {'user_email': '<script>prompt(5000/200)</script>', 'title': '<script>prompt(5000/200)</script>', 'price': '<script>prompt(5000/200)</script>'}
+***************
+[17:17:20] [INFO] Checking connection to: http://127.0.0.1:8081/userhome
+[17:17:20] [INFO] Connection estabilished 200
+[17:17:20] [WARNING] Target have form with POST method: http://127.0.0.1:8081/
+[17:17:20] [INFO] Collecting form input key.....
+[17:17:20] [INFO] Sending payload (POST) method...
+[17:17:20] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[17:17:21] [INFO] Checking connection to: http://127.0.0.1:8081/updateproduct
+[17:17:21] [INFO] Connection estabilished 200
+[17:17:21] [WARNING] Target have form with POST method: http://127.0.0.1:8081/updateproduct
+[17:17:21] [INFO] Collecting form input key.....
+[17:17:21] [INFO] Form key name: email value: <script>prompt(5000/200)</script>
+[17:17:21] [INFO] Form key name: title value: <script>prompt(5000/200)</script>
+[17:17:21] [INFO] Form key name: new_title value: <script>prompt(5000/200)</script>
+[17:17:21] [INFO] Form key name: new_price value: <script>prompt(5000/200)</script>
+[17:17:21] [INFO] Internal error: 'type'
+[17:17:21] [INFO] Internal error: 'name'
+[17:17:21] [INFO] Sending payload (POST) method...
+[17:17:21] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[17:17:21] [INFO] Checking connection to: http://127.0.0.1:8081/registration
+[17:17:21] [INFO] Connection estabilished 200
+[17:17:21] [WARNING] Target have form with POST method: http://127.0.0.1:8081/registration
+[17:17:21] [INFO] Collecting form input key.....
+[17:17:21] [INFO] Form key name: user_email value: <script>prompt(5000/200)</script>
+[17:17:21] [INFO] Form key name: user_name value: <script>prompt(5000/200)</script>
+[17:17:21] [INFO] Form key name: user_pass value: <script>prompt(5000/200)</script>
+[17:17:21] [INFO] Internal error: 'name'
+[17:17:21] [INFO] Sending payload (POST) method...
+[17:17:21] [INFO] Parameter page using (POST) payloads but not 100% yet...
