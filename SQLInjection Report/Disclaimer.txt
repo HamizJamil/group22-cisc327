@@ -1,0 +1,1 @@
+I have been in contact with the prof troubleshoot the cookie poisoning injection trials. I ensured that the session_id was selected from the correct area and even attempted to inject into more specific links than the home one to try and access more private information. Nothing yielded the result we expected but as a team we will continiue past this sprint to troubleshoot
