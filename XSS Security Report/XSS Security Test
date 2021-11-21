@@ -1,3 +1,37 @@
+	    Route/URL	                          Parameter	       XSS successful?
+Scan	http://127.0.0.1:8081/	              N/A	           NO
+Scan    http://127.0.0.1:8081/updateprofile   user_email       NO
+Scan    http://127.0.0.1:8081/updateprofile   user_name        NO
+Scan    http://127.0.0.1:8081/updateprofile   shipping_address NO
+Scan    http://127.0.0.1:8081/updateprofile   postal_code      NO
+Scan    http://127.0.0.1:8081/login           user_email       NO
+Scan    http://127.0.0.1:8081/login           user_pass        NO
+Scan    http://127.0.0.1:8081/updateprofile   user_email       NO
+Scan    http://127.0.0.1:8081/logout          N/A              NO
+Scan    http://127.0.0.1:8081/updateprofile   user_email       NO
+Scan    http://127.0.0.1:8081/create_product  user_email       YES
+Scan    http://127.0.0.1:8081/userhome        N/A              NO
+Scan    http://127.0.0.1:8081/updateproduct   email            NO
+Scan    http://127.0.0.1:8081/updateproduct   title            NO
+Scan    http://127.0.0.1:8081/updateproduct   new_title        NO
+Scan    http://127.0.0.1:8081/updateproduct   new_price        NO
+Scan    http://127.0.0.1:8081/registration    user_email       NO
+Scan    http://127.0.0.1:8081/registration    user_name        NO
+Scan    http://127.0.0.1:8081/updateproduct   user_pass        NO
+
+Q1) We did two rounds of scanning. Why the results are different?
+ What is the purpose of adding in the session id?
+ We log in with a user in our database to be able to access all the other pages
+ of our website, since creating a product, updating profile etc. won't make
+ sense without a user in our session. The purpose of adding the session id is to
+ be able to test and scan the website with a user in session.
+Q2) re all the possible XSS (script injection)
+links/routes covered in the table above?
+ (think about any links that will render user inputs, such as URL paramer,
+  cookies, flask flash calls). If not, are those link/pages vulnerable to XSS?
+  Yes, all the possible routes are in the table above.
+
+  The scans on my terminal:
 ██████╗ ██╗    ██╗███╗   ██╗██╗  ██╗███████╗███████╗
 ██╔══██╗██║    ██║████╗  ██║╚██╗██╔╝██╔════╝██╔════╝
 ██████╔╝██║ █╗ ██║██╔██╗ ██║ ╚███╔╝ ███████╗███████╗ {v0.5 Final}
