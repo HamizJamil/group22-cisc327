@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 services:
   qbay-web:
     image: hamizjamil/qbay-22:v0
