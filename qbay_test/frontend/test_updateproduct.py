@@ -60,6 +60,11 @@ class FrontEndProductUpdateTest(BaseCase):
     # SMOKE TESTS FOR CREATE PRODUCT
     # checking if submit and fill works
     def test_update_prod_1(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')  # open up the page
         self.type("#email", "test0@test.com")  # insert the text fields
         self.type("#title", "Iphone 11 Max Pro")
@@ -74,6 +79,11 @@ class FrontEndProductUpdateTest(BaseCase):
     # BOUNDARY TESTS FOR CREATE PRODUCT
     #  Checking when character title length is 1 char
     def test_update_prod_2(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", "Iphone 11 Mini Pro")
@@ -88,6 +98,11 @@ class FrontEndProductUpdateTest(BaseCase):
     # checking when title length is 80 char
     def test_update_prod_3(self, *_):
         global bad_title
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", "12")
@@ -103,6 +118,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying error when description is 20 char long
     def test_update_prod_4(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", bad_title)
@@ -116,6 +136,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying error when description is 2000 char long
     def test_update_prod_5(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", "Test4")
@@ -129,6 +154,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # verfifying not allowing lowering price
     def test_update_prod_6(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", "Test5u")
@@ -142,6 +172,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # verfifying update of product when price $10000
     def test_update_prod_7(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", "Test5u")
@@ -155,6 +190,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     #  Checking when character title length is 0 char
     def test_update_prod_8(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", "Test7u")
@@ -168,6 +208,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     #  Checking when character title length is 81 char
     def test_update_prod_9(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         bad_title = ("111111111111111111111111111111111111111111111111111111" +
                      "111111111111111111111111112")
         self.open(base_url + '/updateproduct')
@@ -183,6 +228,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying error when description is 19 char long
     def test_update_prod_10(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", "Test7u")
@@ -196,6 +246,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     #  Checking when character description length is 2001 char
     def test_update_prod_11(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         global two_thousand_char_description
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
@@ -211,6 +266,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying error when price is 9
     def test_update_prod_12(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", "Test7u")
@@ -224,6 +284,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying error when price is 10001
     def test_update_prod_13(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", "Test7u")
@@ -237,6 +302,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying Condition FFFF error
     def test_update_prod_14(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0wq@test.com")
         self.type("#title", "Test7u")
@@ -250,6 +320,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying Condition FFFT error
     def test_update_prod_15(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0wq@test.com")
         self.type("#title", "Test7u")
@@ -263,6 +338,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying Condition FFTF error
     def test_update_prod_16(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0wq@test.com")
         self.type("#title", "Test7u")
@@ -276,6 +356,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying Condition FFTT error
     def test_update_prod_17(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0wq@test.com")
         self.type("#title", "Test7u")
@@ -289,6 +374,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying Condition FTFF error
     def test_update_prod_18(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0wq@test.com")
         self.type("#title", "Test7u")
@@ -302,6 +392,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying Condition FTFT error
     def test_update_prod_19(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0wq@test.com")
         self.type("#title", "Test7u")
@@ -315,6 +410,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying Condition FTTF error
     def test_update_prod_20(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0wq@test.com")
         self.type("#title", "Test7u")
@@ -328,6 +428,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying Condition FTTT error
     def test_update_prod_21(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0wq@test.com")
         self.type("#title", "Test7u")
@@ -341,6 +446,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying Condition TFFF error
     def test_update_prod_22(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", "Test7u")
@@ -354,6 +464,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying Condition TFFT error
     def test_update_prod_23(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", "Test7u")
@@ -367,6 +482,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying Condition TFTF error
     def test_update_prod_24(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", "Test7u")
@@ -380,6 +500,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying Condition TFTT error
     def test_update_prod_25(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", "Test7u")
@@ -393,6 +518,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying Condition TTFF error
     def test_update_prod_26(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", "Test7u")
@@ -406,6 +536,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying Condition TTFT error
     def test_update_prod_27(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", "Test7u")
@@ -419,6 +554,11 @@ class FrontEndProductUpdateTest(BaseCase):
 
     # veryfying Condition TTTF error
     def test_update_prod_28(self, *_):
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "test0@test.com")  # insert the text fields
+        self.type("#user_pass", "eA123456!")
+        self.find_element("#login").click()  # click login
+
         self.open(base_url + '/updateproduct')
         self.type("#email", "test0@test.com")
         self.type("#title", "Test7u")

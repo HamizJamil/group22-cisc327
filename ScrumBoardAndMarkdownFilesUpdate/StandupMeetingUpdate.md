@@ -44,7 +44,7 @@
 # NORMAN ANDERSON
 # Wednesday 11/17/2021
 1. what is the branch he/she worked on (has to be pushed to the repo).
-  - norman\_A5
+  - norman_A5_authenticate
 2. what is the progress so far (at least some test cases written/some results/code available)?
   - cloned PwnXSS
   - Was able to scan my application and generate logs for the registration and login pages.

@@ -5,14 +5,22 @@ from qbay.models import User
 
 class FrontEndUpdateProfileTest(BaseCase):
 
-    # Smoke Test - Verifying the user can access update profile
+    # Smoke Test - Register Update user and verify access to update profile
     def test_update_profile1(self):
+        self.open(base_url + '/registration')  # open up the page
+        self.type("#user_name", "profiletest")  # insert the text fields
+        self.type("#user_email", "update@gmail.com")
+        self.type("#user_pass", "ABC@abc")
+        self.find_element("#Submit").click()  # click save to submit
+        # verifying successful registration
+        new_user = User.query.filter_by(email="update@gmail.com").first()
+        assert new_user is not None
+
         self.open(base_url + '/')
         self.find_element("#navbarDropdownMenuLink1").click()
         self.find_element("#updateprofile").click()
-
         # Getting current page title
-
+        self.open(base_url + '/updateprofile')
         assert self.assert_title("Update Profile")
 
     # Set of Input Partitioning Tests
@@ -22,7 +30,7 @@ class FrontEndUpdateProfileTest(BaseCase):
         self.open(base_url + '/login')  # open up the page
         self.type("#user_email", "update@gmail.com")  # insert the text fields
         self.type("#user_pass", "ABC@abc")
-        self.find_element("#login").click()  # click save to submit
+        self.find_element("#login").click()  # click login
 
         self.open(base_url + '/updateprofile')
         self.type("#user_email", "update@gmail.com")
@@ -190,6 +198,11 @@ class FrontEndUpdateProfileTest(BaseCase):
     # correct postal code conversion: lower case to uppercase with no space
     def test_update_profile11(self, *_):
 
+        self.open(base_url + '/login')  # open up the page
+        self.type("#user_email", "update@gmail.com")  # insert the text fields
+        self.type("#user_pass", "ABC@abc")
+        self.find_element("#login").click()  # click save to submit
+
         self.open(base_url + '/updateprofile')
         self.type("#user_email", "update@gmail.com")
         self.type("#user_name", "profiletest")
@@ -199,7 +212,7 @@ class FrontEndUpdateProfileTest(BaseCase):
         self.find_element("#Submit").click()
 
         updated = User.query.filter_by(email="update@gmail.com").first()
-
+        assert updated.postal_code == "K8L3N6"
         assert updated is not None
 
         # assert updated.user_name == "profiletest"
