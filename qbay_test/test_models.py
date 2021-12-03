@@ -36,26 +36,27 @@ def test_r3_user_update():
 def test_r4_product_create():
     # testing creating a product with proper credentials
     assert create_product('iPhone11X New', 'Brand New iPhone11X 2020',
-                          'test0@test.com', 600) is True
+                          'test0@test.com', 12) is True
     assert create_product('Gloves', 'Winning Gloves 12 Oz',
-                          'test0@test.com', 250) is True
+                          'test0@test.com', 15) is True
     # testing creating a product with different correct credentials
     assert create_product('iPhone11X Pro', 'This iPhone is so powerful',
-                          'test1@test.com', 1000) is True
+                          'test1@test.com', 20) is True
+    assert create_product('Ferrari', 'Cherry Red, 10,000km ONLY!',
+                          'test1@test.com', 100) is True
     # testing product failure with too small of description
     assert create_product('iPhone11X', ' New ', 'test0@test.com', 10) is False
 
 
 def test_r5_product_update():
     # testing updating a prodcut with new description and price
-    assert update_product('iPhone11X New', 'test0@test.com', 1000,
+    assert update_product('iPhone11X New', 'test0@test.com', 33,
                           "Coolest Phone Ever", None) is not None
-    assert update_product('iPhone11X Pro', 'test1@test.com', 1500, None,
+    assert update_product('iPhone11X Pro', 'test1@test.com', 25, None,
                           "256GB storage and fast") is not None
     # incorrectily updating product with price decrease
-    assert update_product('iPhone11X New', 10001, "Coolest Phone Ever", None
+    assert update_product('iPhone11X New', 45, "Coolest Phone Ever", None
                           ) is None
-
 
 def test_r6_create_review():
     # creating a review with int score
@@ -64,10 +65,31 @@ def test_r6_create_review():
     assert create_review('test0@test.com', "Six", "This phone is so good"
                          ) is False
 
+def test_r7_display_products_before_purchase():
+    current_user = 'test0@test.com'
+    assert display_products(current_user) is not None
 
-def test_r7_create_transaction():
-    # check transaction with valid product
+def test_r8_create_transaction():
+    current_user = 'test0@test.com'
     product_bought = Product.query.filter_by(title='iPhone11X Pro'
                                              ).first()
-    price = product_bought.price
-    assert create_transaction('test1@test.com', price) is True
+    product_id = product_bought.id
+    # successful purchase 
+    assert create_transaction(current_user, product_id) is True
+    # checking that you cannot buy same product over again
+    assert create_transaction(current_user, product_id) is False
+    # checking that you cannot buy your own product
+    product_bought2 = Product.query.filter_by(title='Gloves'
+                                             ).first()
+    product_id2 = product_bought2.id                                    
+    assert create_transaction(current_user, product_id2) is False
+    # checking that you cannot buy product over fund amount
+    product_bought3 = Product.query.filter_by(title='Ferrari'
+                                             ).first()
+    product_id3 = product_bought3.id                                    
+    assert create_transaction(current_user, product_id3) is False
+
+def test_r9_display_products():
+    current_user = 'test0@test.com'
+    assert display_products(current_user) is not None
+

@@ -502,21 +502,56 @@ def create_review(email, score, review):
     return True
 
 
-def create_transaction(email, price):
-    global number_of_transactions
-    buyer_email = User.query.filter_by(email=email)
-    if buyer_email is None:
-        print("ERROR: Account Not registered please create an account")
+def create_transaction(current_user, product_id, erro_handler=None):
+    buyer = User.query.filter_by(email=current_user).first()
+    # print("BUYER: ", buyer)
+    if buyer is None: # double check product exists
+        if erro_handler is not None:
+            print("!!!!!!!!!")
+            error_handler("User Doesnt Exist")
         return False
-    price_search = Product.query.filter_by(price=price)
-    if price_search is None:
-        print("ERROR: Account Not registered please create an account")
+    current_funds = buyer.balance
+    product = Product.query.filter_by(id=product_id).first()
+    if product is None: # double check product exists
+        if erro_handler is not None:
+            error_handler("Product Doesnt Exist")
         return False
-    transaction = Transaction(buyer_email=email, price=price)
-    # create the product object
-    db.session.add(transaction)
-    db.session.commit()  # add product to db and save
-    return True
+    if product.owner_email == current_user:
+        if erro_handler is not None:
+            error_handler("Cannot Buy Your Own Product")
+        return False
+    product_price = product.price
+    if current_funds < product_price: # check if USER has enough funds
+        if erro_handler is not None:
+            error_handler("Insufficient Funds")
+        return False
+    else:
+        buyer.balance = current_funds - product_price # updating funds
+        # print("NEW BALANCE: ", buyer.balance)
+        # print("REMOVING: ", product)
+        print("Products before Purchase: ", Product.query.all())
+        db.session.delete(product) # remove product from db
+        transaction = Transaction(buyer_email=current_user, 
+                                  price=product_price)
+        db.session.add(transaction) # add transaction
+        db.session.commit()  # add product to db and save
+        print("Products After Purchase: ", Product.query.all())
+        return True
+    
 
+# displays all products that do not belong to current session user
+def display_products(current_user): 
+    list_of_products =  Product.query.all()
+    list_of_nondisplay_products = Product.query.filter_by(owner_email=
+                                                          current_user).all()
+    for product in list_of_nondisplay_products:
+        if product in list_of_products:
+            list_of_products.remove(product)
+    print("All Products that should be dsiplayed: ", list_of_products)
+    print("ALL  PRODUCTS that should NOT be displayed: ", list_of_nondisplay_products)
+    if len(list_of_products) == 0:
+        return None
+    else:
+        return list_of_products
 
 db.create_all()
