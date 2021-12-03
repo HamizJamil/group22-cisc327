@@ -58,6 +58,7 @@ def test_r5_product_update():
     assert update_product('iPhone11X New', 45, "Coolest Phone Ever", None
                           ) is None
 
+
 def test_r6_create_review():
     # creating a review with int score
     assert create_review('test1@test.com', 6, "This phone is so good") is True
@@ -65,9 +66,11 @@ def test_r6_create_review():
     assert create_review('test0@test.com', "Six", "This phone is so good"
                          ) is False
 
+
 def test_r7_display_products_before_purchase():
     current_user = 'test0@test.com'
     assert display_products(current_user) is not None
+
 
 def test_r8_create_transaction():
     current_user = 'test0@test.com'
@@ -80,14 +83,15 @@ def test_r8_create_transaction():
     assert create_transaction(current_user, product_id) is False
     # checking that you cannot buy your own product
     product_bought2 = Product.query.filter_by(title='Gloves'
-                                             ).first()
+                                              ).first()
     product_id2 = product_bought2.id                                    
     assert create_transaction(current_user, product_id2) is False
     # checking that you cannot buy product over fund amount
     product_bought3 = Product.query.filter_by(title='Ferrari'
-                                             ).first()
+                                              ).first()
     product_id3 = product_bought3.id                                    
     assert create_transaction(current_user, product_id3) is False
+
 
 def test_r9_display_products():
     current_user = 'test0@test.com'
