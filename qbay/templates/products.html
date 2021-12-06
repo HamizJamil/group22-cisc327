@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Products{% endblock %}
+{% block content %}
+<html>
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+
+<h2>List of Products</h2>
+
+<table>
+    <tr>
+        <th>Item</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th></th>
+    </tr>
+    {% for product in query %}
+    <tr>
+        <td>{{ product.title }}</td>
+        <td>{{ product.description }}</td>
+        <td>{{ product.price }}</td>
+        <td><a href="{{ product.price }}">purchase</a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+{% endblock %}
+</html>
+
+

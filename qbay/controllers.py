@@ -133,3 +133,9 @@ def update_product_post():
 @app.route("/userhome", methods=["GET"])
 def user_home():
     return render_template("userhome.html")
+
+@app.route("/products", methods=["GET"])
+def products():
+    email = session["user_email"]
+    list_of_products = display_products(email)
+    return render_template("products.html", query=list_of_products)
