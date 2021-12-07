@@ -113,7 +113,7 @@ class Transaction(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     price = db.Column(db.Float, index=True, unique=False)
-    buyer = db.Column(db.String, db.ForeignKey('user.email'))
+    buyer_email = db.Column(db.String, db.ForeignKey('user.email'))
 
     def __repr__(self):
         return "Transaction {}: {}, date: {}".format(self.id, self.product,
