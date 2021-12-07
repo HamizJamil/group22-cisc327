@@ -1,7 +1,7 @@
 from seleniumbase import BaseCase
 from qbay_test.conftest import base_url
 from unittest.mock import patch
-from qbay.models import Product, Transaction, create_product
+from qbay.models import Product, Transaction, create_product, login, register_user
 from selenium import webdriver
 
 class BuyProductFrontendTest(BaseCase):
