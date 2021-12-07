@@ -33,11 +33,11 @@
         <th></th>
     </tr>
     {% for product in query %}
-    <tr>
+    <tr> 
         <td>{{ product.title }}</td>
         <td>{{ product.description }}</td>
         <td>{{ product.price }}</td>
-        <td><a href="{{ product.price }}">purchase</a></td>
+        <td><a href="{{ url_for('.buy_product', product_id=product.id) }}">Purchase</a></td>
     </tr>
     {% endfor %}
 </table>
