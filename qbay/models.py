@@ -84,6 +84,7 @@ class Product(db.Model):
     price = db.Column(db.Float, index=True, unique=False)
     owner_email = db.Column(db.String, db.ForeignKey('user.email'))
     last_date_modified = db.Column(db.String(20), index=True, unique=False)
+    sold = db.Column(db.Boolean, index=True, unique=False)
 
     def __init__(self, title, price, description, owner_email,
                  today=str(date.today())):
@@ -92,6 +93,7 @@ class Product(db.Model):
         self.description = description
         self.owner_email = owner_email
         self.last_date_modified = today
+        self.sold = False
 
     def __repr__(self):
         return "Product {}: {} Price: {}".format(self.id, self.title,
@@ -531,23 +533,27 @@ def create_transaction(current_user, product_id, erro_handler=None):
         # print("REMOVING: ", product)
         print("Products before Purchase: ", Product.query.all())
         db.session.delete(product)  # remove product from db
-        transaction = Transaction(buyer_email=current_user, 
+        transaction = Transaction(buyer_email=current_user,
                                   price=product_price)
         db.session.add(transaction)  # add transaction
         db.session.commit()   # add product to db and save
         print("Products After Purchase: ", Product.query.all())
         return True
-    
+
 
 # displays all products that do not belong to current session user
-def display_products(current_user): 
+def display_products(current_user):
     list_of_products = Product.query.all()
     bad_products = Product.query.filter_by(owner_email=current_user).all()
+    sold_products = Product.query.filter_by(sold=True).all()
     for product in bad_products:
         if product in list_of_products:
             list_of_products.remove(product)
+    for product in sold_products:
+        if product in list_of_products:
+            list_of_products.remove(product)
     print("All Products that should be dsiplayed: ", list_of_products)
-    print("ALL  PRODUCTS that should NOT be displayed: ", 
+    print("ALL  PRODUCTS that should NOT be displayed: ",
           bad_products)
     if len(list_of_products) == 0:
         return None
