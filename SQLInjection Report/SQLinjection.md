@@ -1,3 +1,4 @@
+#SQLmap test without cookies
 | **Scan** | **Route/URL**                         | **Parameter**    | **Number of Injection Trials** | **Number of Successful Trials** |
 |----------|---------------------------------------|------------------|--------------------------------|---------------------------------|
 | 1        | <http://127.0.0.1:8081/login>         | user_email       | 15                             | 0                               |
@@ -18,10 +19,7 @@
 |          |                                       | price            | 15                             | 0                               |
 |          |                                       | description      | 15                             | 0                               |
 
-# SQLmap Test
-
-# SQLmap Test with Cookies
-
+#SQLmap test with cookies
 | **Scan** | **Route/URL**                         | **Parameter**    | **Number of Injection Trials** | **Number of Successful Trials** |
 |----------|---------------------------------------|------------------|--------------------------------|---------------------------------|
 | 1        | <http://127.0.0.1:8081/login>         | user_email       | 15                             | 0                               |
@@ -41,59 +39,18 @@
 |          |                                       | title            | 15                             | 0                               |
 |          |                                       | price            | 15                             | 0                               |
 |          |                                       | description      | 15                             | 0                               |
-
-# QUESTIONS
 
 1.  **🚢 Are all the user input fields in your application covered in all the
     test cases above? Any successful exploit?**
+    
+Yes, all user input fields within the application are covered within the test cases above. Within create product user_email, title, price and description were all cover. Within updateproduct email, title, new_title, new_price and new_description were all covered. Within updateprofile user_name, shipping_address and postal_code were all covered. Within registration user_email, user_pass and user_name were all covered. Within login user_email and user_pass were both covered. No successful exploits were found, this is shown in the console logs where all parameters are given an error asserting that they are non-injectable.
 
-Yes, every field is covered in the test cases above. In the login page both user
-email and user password are tested. In registration user email, user password
-and username are all tested. In update profile only username and shipping
-address and postal code are updated per the customer request. In create product
-and update product the titles, descriptions, prices and respective new prices,
-new titles and new descriptions are all tested. Below the team has attached
-screenshots of the app and its respective input blocks to confirm the inputs
-that should be tested
-
-Thankfully the sqlmap open-source tool did not return any exploits or vulnerable
-data/parameters in the csv file or in the terminal. This is proven in the figure
-below the describing that all errors are not injectable. The team confirmed with
-the prof that this is indeed an acceptable result concluding that none of the
-parameters were vulnerable.
-
-![Graphical user interface, text, application, chat or text message Description
-automatically generated](media/a6db0e104a1adc48e1954e481016c074.png)![Graphical
-user interface, website Description automatically
-generated](media/ba4de0fca62099bad19f47a40efbc108.png)![Graphical user
-interface, website Description automatically
-generated](media/2e0175d79ff0987eaa6fdc71a0e65e75.png)![Graphical user
-interface, text, application Description automatically
-generated](media/df717918f12b246bb5995a2d3fbeb44c.png)![Graphical user interface
-Description automatically generated](media/c1d346b41a39a717891a8293b0a86034.png)
-
-**![](media/9f6705303a84ff11644f07da4c64b293.png)**
-
-1.  **🚢 We did two rounds of scanning. Why the results are different? What is
+2.  **🚢 We did two rounds of scanning. Why the results are different? What is
     the purpose of adding in the session id?**
 
-    In the end after both rounds of scanning returned empty csv files and ERROR
-    describing that no parameters appear injectable. The terminal outputs still
-    did differentiate in a few different places. The tests without any
-    predefined session for testing but used a generated cookie of a new user.
-    The injection cookie tests involved using the “session_id” – which was the
-    one provided in the terminal after I retrieved the cookie from the request
-    headers of the index page.
+There is variance within the two difference at several points, however there is no variance in what parameters were covered as our application does not contain any fields that are only accessible to logged in users. The purpose of adding the session id in the second test is to test fields whilst logged in as a valid user.
 
-    The purpose of adding the “session_id” is so the attacker (in this case the
-    students deploying the exploit tool) can act as a valid user using their
-    cookies which are files of user data stored in the computer of the user who
-    owns that session id. If the attacker can modify elements of that cookie to
-    then exploit security measures – in our case scan restricted elements that
-    are only available after logging in. An example of this stated in the
-    assignment description is the authentication function.
-
-2.  **🚢 Summarize the injection payload used based on the logs, and briefly
+3.  **🚢 Summarize the injection payload used based on the logs, and briefly
     discuss the purpose.**
 
 The payload used to test the system is broken down into 6 main SQL injection
