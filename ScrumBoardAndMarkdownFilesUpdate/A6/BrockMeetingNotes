@@ -1,0 +1,26 @@
+# MONDAY
+
+1. what is the branch he/she worked on (must be pushed to the repo)?
+  - Brock-branch-A6
+2. what is the progress so far (at least some test cases written, more than 2)?
+
+- Wrote test cases for frontend buy product selenium tests
+
+1. any difficulties.
+  - Some errors need to be debugged in test cases
+2. what is the plan for the days before the deadline?
+  - Debug test cases
+  - Complete SQL injection testing
+
+# TUESDAY
+
+1. what is the progress so far (at least some test cases written, more than 2)
+
+- debugged frontend test cases
+- redid SQL injection testing and updated SQL injection report
+
+1. any difficulties.
+  - N/A
+2. what is the plan for the days before the deadline?
+
+- Make sure my team is in a good position to submit on time
